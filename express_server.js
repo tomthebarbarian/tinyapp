@@ -14,11 +14,22 @@ app.use(bodyParser.urlencoded({extended: true}));
 const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
-
+const users = {
+  tomthebarb: {
+    pass:'password',
+    urls:{}
+  },
+  russetyellows: {},
+  theTankMan: {},
+};
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+// Server listening;
+app.listen(PORT);
+console.log(`listening at ${PORT}`);
 
 // Requests
 
@@ -35,9 +46,7 @@ app.get("/urls/new", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
-
   res.render("urls_new");
- 
 });
 
 
@@ -95,6 +104,3 @@ if (app.status === 404) {
   return '404 error';
 }
 
-// Server listening;
-app.listen(PORT);
-console.log(`listening at ${PORT}`);
