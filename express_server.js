@@ -99,8 +99,6 @@ app.get("/u/:id", (req, res) => {
 });
 
 
-
-
 // add a url
 app.post("/urls", (req, res) => {
   // if not logged in
@@ -136,6 +134,40 @@ app.get("/", (req, res) => {
     res.redirect('/login');
   }
 });
+
+// Log in and Register
+app.get('/login', (req, res) => {
+  // if logged in
+  let pass = '';
+  if (pass) {
+    return 'login page';
+  }
+  return 'post login';
+});
+
+app.post('/login', (req, res) => {
+  // if logged in
+  let pass = '';
+  if (pass) {
+    return 'login page';
+  }
+  res.redirect('/ulrs');
+});
+
+// new user
+app.post('/register', (req, res) => {
+  users[req.name]['password'] = 'encryptedpass';
+  res.redirect('/ulrs');
+});
+
+// delete cookie
+app.post('/logout', (req, res) => {
+  // if logged in
+  res.redirect('/ulrs');
+});
+
+
+
 
 // if 404 err
 if (app.status === 404) {
