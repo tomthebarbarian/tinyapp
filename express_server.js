@@ -14,17 +14,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
+
+let currentUser = 'tomthebarb';
+
+let currentUrls = users[currentUser].urls;
+
 const users = {
   tomthebarb: {
     pass:'password',
-    urls:{}
+    urls:{
+      "b2xVn2": "http://www.lighthouselabs.ca",
+      "9sm5xK": "http://www.google.com",
+    }
   },
   russetyellows: {},
   theTankMan: {},
 };
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": "http://www.google.com",
 };
 
 // Server listening;
@@ -52,12 +60,42 @@ app.get("/urls/new", (req, res) => {
 
 // Extra info for a specific short url
 app.get("/urls/:shortURL", (req, res) => {
+  
   res.redirect(urlDatabase[req.params.shortURL]);
 
   // const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   // res.render('urls_show', templateVars);
   // res.json(urlDatabase);
   // res.redirect(templateVars.longURL);
+});
+
+// Individidual short address pages
+app.get("/urls/:ids", (req, res) => {
+  // if not logged in
+  const pass = false;
+  if (pass) {
+    console.log('login');
+    res.redirect('/login');
+  }
+  res.redirect(urlDatabase[req.params.shortURL]);
+});
+
+
+// Update an individual page for an id
+app.post("/urls/:id", (req, res) => {
+  // if not logged in
+  const pass = false;
+  if (pass) {
+    console.log('login');
+    res.redirect('/login');
+  }
+  urlDatabase[req.params.shortURL] = 'newvalue';
+});
+
+// Redirect based on short address.
+app.get("/u/:id", (req, res) => {
+  // if not logged in
+  res.redirect(urlDatabase[req.params.shortURL]);
 });
 
 
