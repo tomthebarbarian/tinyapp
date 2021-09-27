@@ -6,6 +6,9 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 
 
+//
+
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 const generateRandomString = function() {
@@ -31,9 +34,14 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send(generateRandomString());
+  let currLong = req.body.longURL;
+  console.log(currLong);  // Log the POST request body to the console
+  const currShort = generateRandomString();
+  
+  // res.send(currShort);
   res.status = 200;      // Respond with 'Ok' (we will replace this)
+  urlDatabase[currShort] = currLong;
+  res.redirect(`/urls/${currShort}`);
 });
 
 app.get("/urls", (req, res) => {
@@ -46,10 +54,17 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// app.get("/urls/:shortURL", (req, res) => {
+//   res.redirect(longURL);
+// });
+
 app.get("/urls/:shortURL", (req, res) => {
+  res.redirect(urlDatabase[req.params.shortURL]);
+
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  res.render('urls_show', templateVars);
+  // res.render('urls_show', templateVars);
   // res.json(urlDatabase);
+  // res.redirect(templateVars.longURL);
 });
 
 app.get("/hello", (req, res) => {
@@ -57,10 +72,10 @@ app.get("/hello", (req, res) => {
 });
 
 
-app.get("/set", (req, res) => {
-  const a = 1;
-  res.send(`a = ${a}`);
-});
+// app.get("/set", (req, res) => {
+//   const a = 1;
+//   res.send(`a = ${a}`);
+// });
  
 // app.get("/fetch", (req, res) => {
 //   res.send(`a = ${a}`);
