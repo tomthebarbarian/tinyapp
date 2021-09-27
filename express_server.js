@@ -8,6 +8,9 @@ app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
 
+const generateRandomString = function() {
+  return Math.random().toString(36).substring(2, 8);
+};
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -25,6 +28,12 @@ app.listen(PORT, () => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // Log the POST request body to the console
+  res.send(generateRandomString());
+  res.status = 200;      // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/urls", (req, res) => {
