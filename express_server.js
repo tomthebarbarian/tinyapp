@@ -38,6 +38,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+// add a url
 app.post("/urls", (req, res) => {
   let currLong = req.body.longURL;
   console.log(currLong);  // Log the POST request body to the console
@@ -49,20 +50,25 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${currShort}`);
 });
 
+// see url list
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase};
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
 });
 
+// Making a new short url
 app.get("/urls/new", (req, res) => {
+  // if not logged in
+  const pass = '';
+  if (pass) {
+    res.redirect('/login');
+  }
   res.render("urls_new");
+ 
 });
 
-// app.get("/urls/:shortURL", (req, res) => {
-//   res.redirect(longURL);
-// });
-
+// Extra info for a specific short url
 app.get("/urls/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 

@@ -37,6 +37,7 @@ a delete button which makes a POST request to /urls/:id/delete
 (Stretch) the date the short URL was created
 (Stretch) the number of times the short URL was visited
 (Stretch) the number number of unique visits for the short URL
+
 (Minor) a link to "Create a New Short Link" which makes a GET request to /urls/new
 if user is not logged in:
 returns HTML with a relevant error message
@@ -46,6 +47,7 @@ returns HTML with a relevant error message
 if user is logged in:
 returns HTML with:
 the site header (see Display Requirements above)
+
 a form which contains:
 a text input field for the original (long) URL
 a submit button which makes a POST request to /urls
