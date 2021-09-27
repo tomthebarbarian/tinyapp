@@ -15,10 +15,10 @@ a link to the registration page (/register)
 
 ### Behavior
 
-#### GET /
+#### GET / 
 
 if user is logged in:
-(Minor) redirect to /urls
+(Minor) redirect to /urls * DONE
 if user is not logged in:
 (Minor) redirect to /login
 
@@ -30,7 +30,9 @@ the site header (see Display Requirements above)
 a list (or table) of URLs the user has created, each list item containing:
 a short URL
 the short URL's matching long URL
+
 an edit button which makes a GET request to /urls/:id
+
 a delete button which makes a POST request to /urls/:id/delete
 
 ##### Stretch
@@ -85,7 +87,6 @@ if user is logged in:
 generates a short URL, saves it, and associates it with the user
 redirects to /urls/:id, where :id matches the ID of the newly saved URL
 if user is not logged in:
-
 (Minor) 
 returns HTML with a relevant error message
 

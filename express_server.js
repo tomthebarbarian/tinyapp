@@ -22,24 +22,45 @@ const urlDatabase = {
 
 // Requests
 
-// redirect to appropriate start page
-app.get("/", (req, res) => {
-  // res.send("Hello!");
-  res.redirect('/urls');
-  // if not logged in
-  const pass = '';
-  if (pass) {
-    res.redirect('/login');
-  }
-});
-
 // just read the db
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+// Making a new short url
+app.get("/urls/new", (req, res) => {
+  // if not logged in
+  const pass = false;
+  if (pass) {
+    console.log('login');
+    res.redirect('/login');
+  }
+
+  res.render("urls_new");
+ 
+});
+
+
+// Extra info for a specific short url
+app.get("/urls/:shortURL", (req, res) => {
+  res.redirect(urlDatabase[req.params.shortURL]);
+
+  // const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  // res.render('urls_show', templateVars);
+  // res.json(urlDatabase);
+  // res.redirect(templateVars.longURL);
+});
+
+
+
+
 // add a url
 app.post("/urls", (req, res) => {
+  // if not logged in
+  const pass = '';
+  if (pass) {
+    res.redirect('/loginerr');
+  }
   let currLong = req.body.longURL;
   console.log(currLong);  // Log the POST request body to the console
   const currShort = generateRandomString();
@@ -57,27 +78,23 @@ app.get("/urls", (req, res) => {
   // res.json(urlDatabase);
 });
 
-// Making a new short url
-app.get("/urls/new", (req, res) => {
+
+// redirect to appropriate start page
+app.get("/", (req, res) => {
+  // res.send("Hello!");
+  res.redirect('/urls');
   // if not logged in
   const pass = '';
   if (pass) {
     res.redirect('/login');
   }
-  res.render("urls_new");
- 
 });
 
-// Extra info for a specific short url
-app.get("/urls/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+// if 404 err
+if (app.status === 404) {
+  return '404 error';
+}
 
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  // res.render('urls_show', templateVars);
-  // res.json(urlDatabase);
-  // res.redirect(templateVars.longURL);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
+// Server listening;
+app.listen(PORT);
+console.log(`listening at ${PORT}`);
