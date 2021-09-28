@@ -73,27 +73,30 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 // Extra info for a specific short url
-app.get("/urls/:shortURL", (req, res) => {
+// app.get("/urls/:shortURL", (req, res) => {
   
-  // res.redirect(urlDatabase[req.params.shortURL]);
+//   // res.redirect(urlDatabase[req.params.shortURL]);
 
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  res.render('urls_show', templateVars);
-});
+//   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+//   res.render('urls_show', templateVars);
+// });
 
 
 // Individidual short address pages
-// app.get("/urls/:ids", (req, res) => {
-//   // if not logged in
-//   const pass = false;
-//   if (pass) {
-//     console.log('login');
-//     res.redirect('/login');
-//   }
-// const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-// res.render('urls_show', templateVars);
 
-// });
+app.get("/urls/:ids", (req, res) => {
+  // if not logged in
+  const pass = false;
+  if (pass) {
+    console.log('login');
+    res.redirect('/login');
+  }
+  // console.log('curr urlids params',req.params);
+  // console.log('curr  body',req.body);
+  // console.log('url db', urlDatabase);
+  const templateVars = { shortURL: req.params.ids, longURL: urlDatabase[req.params.ids] };
+  res.render('urls_show', templateVars);
+});
 
 
 // Update an individual page for an id
@@ -105,9 +108,9 @@ app.post("/urls/:id", (req, res) => {
     res.redirect('/login');
   }
   urlDatabase[req.params.id] = req.body.updateURL;
-  console.log('curr params',req.params);
-  console.log('curr body',req.body);
-  console.log('url db', urlDatabase);
+  // console.log('curr params',req.params);
+  // console.log('curr body',req.body);
+  // console.log('url db', urlDatabase);
   res.redirect(`/urls/${req.params.id}`);
 });
 
