@@ -209,7 +209,9 @@ app.post('/login', (req, res) => {
   // if logged in
   // console.log(req.body);
   // console.log(users[req.body.username].pass);
-  if (!Object.keys(users).includes(req.body.username)) {
+  const {username} = req.body;
+
+  if (!Object.keys(users).includes(username)) {
     const loginstatus = {
       cond:'username does not exist',
       username: undefined
@@ -218,15 +220,25 @@ app.post('/login', (req, res) => {
     return;
   }
 
-  if (req.body.pass === users[req.body.username].pass) {
+  if (!Object.keys(users).includes(username)) {
+    const loginstatus = {
+      cond:'username does not exist',
+      username: undefined
+    };
+    res.render('urls_login',loginstatus);
+    return;
+  }
+
+  if (req.body.pass === users[username].pass) {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
-    res.cookie('username',req.body.username);
+    res.cookie('username',username);
     res.redirect('/urls');
     return;
   }
   const loginstatus = {
-    cond:'wrong username or password'
+    cond:'wrong username or password',
+    username: undefined
   };
   res.render('urls_login',loginstatus);
 });
@@ -245,7 +257,7 @@ app.get('/register', (req, res) => {
   res.redirect('/urls');
 });
 
-
+// register post
 app.post('/register', (req, res) => {
   console.log(req.body);
   const loginstatus = {
