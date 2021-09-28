@@ -191,7 +191,7 @@ app.get('/login', (req, res) => {
   if (pass) {
     return 'login page';
   }
-  return 'post login';
+  res.render('urls_login');
 });
 
 app.post('/login', (req, res) => {
@@ -216,7 +216,7 @@ app.post('/register', (req, res) => {
 app.post('/logout', (req, res) => {
   // if logged in
   res.clearCookie('username');
-  res.redirect('/urls');
+  res.redirect('/login');
 });
 
 
