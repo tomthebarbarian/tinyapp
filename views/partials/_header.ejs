@@ -19,32 +19,20 @@
         <% } else { %>
 
           <a class="nav-item nav-link">
-            <h2>login</h2>
-            <form  action="/login" method="POST">
+            <form  action="/login" method="get">
               <div>
-                <label for="username">Username:</label>
-                <input class="form-control" type="text" name="username" placeholder="tomthebarb" style="width: 300px; margin: 1em">
-                <label for="pass">Password: </label>
-                <input class="form-control" type="text" name="pass" placeholder="abc123" style="width: 300px; margin: 1em">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">login</button>
               </div>
             </form>
           </a>
           <a class="nav-item nav-link">
-            <h2>register</h2>
-            <form  action="/register" method="POST">
+            <form  action="/register" method="get">
               <div>
-                <label for="username">Username:</label>
-                <input class="form-control" type="text" name="username" placeholder="tomthebarb" style="width: 300px; margin: 1em">
-                <label for="pass">Password: </label>
-                <input class="form-control" type="text" name="pass" placeholder="abc123" style="width: 300px; margin: 1em">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                 <button type="submit" class="btn btn-primary">register</button>
               </div>
             </form>
           </a>
         <% }%>
-
-        
       </div>
     </div>
   </nav>
