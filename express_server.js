@@ -153,7 +153,7 @@ app.get("/urls", (req, res) => {
     console.log('need to log in again');
     res.redirect('/login');
   }
-  console.log(req.cookies.username);
+  // console.log(req.cookies.username);
   let currUrls = users[req.cookies.username];
   if (currUrls === undefined) {
     currUrls = {};
@@ -166,37 +166,43 @@ app.get("/urls", (req, res) => {
   };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
-  console.log(req.cookies);
+  // console.log(req.cookies);
 });
 
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
-  if (req.cookies.username === undefined) {
-    res.redirect('/login');
+
+  if (req.cookies.username !== undefined) {
+    res.redirect('/urls');
   }
-  // res.send("Hello!");
-  res.redirect('/urls');
   // if not logged in
+  res.redirect('/login');
+  // res.send("Hello!");
+  
 });
 
 // Log in and Register
 app.get('/login', (req, res) => {
   // if logged in
-  console.log('login', req.params);
+  // console.log('login', req.params);
   let loginstatus = {};
   loginstatus.cond = req.params.login;
+  loginstatus.username = req.cookies.username;
+  // console.log('can we do cookies?', req.cookies);
   if (req.cookies.username === undefined) {
+    // console.log('rendering login');
     res.render('urls_login', loginstatus);
+    return;
   }
+  // console.log('also going to urls?');
   res.redirect('/urls');
 });
 
 app.post('/login', (req, res) => {
   // if logged in
-
-  console.log(req.body);
-  console.log(users[req.body.username].pass);
+  // console.log(req.body);
+  // console.log(users[req.body.username].pass);
   if (req.body.pass === users[req.body.username].pass) {
 
     // console.log('login params',req.params);
