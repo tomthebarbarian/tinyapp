@@ -58,6 +58,19 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// delete a short url entry
+app.post("/urls/:shortURL/delete", (req, res) => {
+  
+  // res.redirect(urlDatabase[req.params.shortURL]);
+
+  const currShort = req.params.shortURL;
+  delete urlDatabase[currShort];
+
+  // res.json(urlDatabase);
+  console.log('urls delete');
+  res.redirect("/urls");
+});
+
 
 // Extra info for a specific short url
 app.get("/urls/:shortURL", (req, res) => {
@@ -70,6 +83,7 @@ app.get("/urls/:shortURL", (req, res) => {
   console.log('urls redir');
   res.redirect("/u/:ids");
 });
+
 
 // Individidual short address pages
 app.get("/urls/:ids", (req, res) => {
