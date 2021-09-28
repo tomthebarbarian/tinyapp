@@ -152,7 +152,7 @@ if email or password are empty:
 returns HTML with a relevant error message
 
 if email already exists:
-returns HTML with a relevant error message
+returns HTML with a relevant error message DONE
 otherwise:
 
 creates a new user

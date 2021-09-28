@@ -234,13 +234,29 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
   console.log(req.body);
+  const loginstatus = {
+    cond:'Existing Username',
+    username: undefined
+  };
   if (Object.keys(users).includes(req.body.username)) {
-    const loginstatus = {
-      cond:'existing username',
-      username: undefined
-    };
     res.render('urls_register',loginstatus);
+    return;
   }
+  if (req.body.username.length < 1) {
+    loginstatus.cond = 'Username is empty';
+    res.render('urls_register',loginstatus);
+    return;
+  }
+  if (req.body.pass.length < 1) {
+    loginstatus.cond = 'Password is empty';
+    res.render('urls_register',loginstatus);
+    return;
+  }
+
+  
+
+
+
   // users[req.name]['password'] = 'encryptedpass';
   // res.redirect('/urls');
 });
