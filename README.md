@@ -11,8 +11,8 @@ Done the user's email
 Done a logout button which makes a POST request to /logout
 
 if a user is not logged in, the header shows:
-a link to the login page (/login)
-a link to the registration page (/register)
+Done a link to the login page (/login)
+Done  a link to the registration page (/register)
 
 ### Behavior
 
@@ -132,6 +132,7 @@ submit button that makes a POST request to /login
 if user is logged in:
 (Minor) redirects to /urls
 if user is not logged in:
+
 returns HTML with:
 a form which contains:
 input fields for email and password
@@ -149,6 +150,7 @@ returns HTML with a relevant error message
 
 if email or password are empty:
 returns HTML with a relevant error message
+
 if email already exists:
 returns HTML with a relevant error message
 otherwise:

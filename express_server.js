@@ -218,9 +218,31 @@ app.post('/login', (req, res) => {
 });
 
 // new user
-app.post('/register', (req, res) => {
-  users[req.name]['password'] = 'encryptedpass';
+app.get('/register', (req, res) => {
+  // console.log('in register now');
+  let loginstatus = {};
+  loginstatus.cond = req.params.login;
+  loginstatus.username = req.cookies.username;
+
+  if (req.cookies.username === undefined) {
+    res.render('urls_register', loginstatus);
+    return;
+  }
   res.redirect('/urls');
+});
+
+
+app.post('/register', (req, res) => {
+  console.log(req.body);
+  if (Object.keys(users).includes(req.body.username)) {
+    const loginstatus = {
+      cond:'existing username',
+      username: undefined
+    };
+    res.render('urls_register',loginstatus);
+  }
+  // users[req.name]['password'] = 'encryptedpass';
+  // res.redirect('/urls');
 });
 
 // delete cookie
