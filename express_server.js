@@ -137,11 +137,8 @@ app.post("/urls", (req, res) => {
   let currLong = req.body.longURL;
   // console.log("The Current long",currLong);  // Log the POST request body to the console
   const currShort = generateRandomString();
-  
-  // res.send(currShort);
-  res.status = 200;      // Respond with 'Ok' (we will replace this)
   urlDatabase[currShort] = currLong;
-  res.redirect(`/u/${currShort}`);
+  res.redirect(`/urls/${currShort}`);
 });
 
 // see url list
