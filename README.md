@@ -119,31 +119,31 @@ if user is logged it but does not own the URL for the given ID:
 #### GET /login
 
 if user is logged in:
-(Minor) redirects to /urls
+(Minor) redirects to /urls DONE
 if user is not logged in:
 returns HTML with:
 a form which contains:
-input fields for email and password
-submit button that makes a POST request to /login
+input fields for email and password DONE
+submit button that makes a POST request to /login DONE
 
 
 ### GET /register
 
 if user is logged in:
-(Minor) redirects to /urls
+(Minor) redirects to /urls DONE
 if user is not logged in:
 
 returns HTML with:
 a form which contains:
-input fields for email and password
-a register button that makes a POST request to /register
+input fields for email and password DONE
+a register button that makes a POST request to /register DONE
 
 #### POST /login DONE
 
 if email and password params match an existing user:
 sets a cookie
 redirects to /urls
-if email and password params don't match an existing user:
+if email and password params don't match an existing user: 
 returns HTML with a relevant error message
 
 #### POST /register
@@ -158,10 +158,10 @@ otherwise:
 creates a new user
 encrypts the new user's password with bcrypt
 
-sets a cookie
+sets a cookie DONE
 redirects to /urls
 
 #### POST /logout
 
-deletes cookie
+deletes cookie DONE
 redirects to /urls

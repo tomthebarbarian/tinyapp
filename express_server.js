@@ -74,16 +74,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 
-// Extra info for a specific short url
-// app.get("/urls/:shortURL", (req, res) => {
-  
-//   // res.redirect(urlDatabase[req.params.shortURL]);
-
-//   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-//   res.render('urls_show', templateVars);
-// });
-
-
 // Individidual short address pages
 
 app.get("/urls/:ids", (req, res) => {
@@ -270,7 +260,6 @@ app.post('/register', (req, res) => {
   res.cookie('username',req.body.username);
   res.redirect('/urls');
 
-  // users[req.name]['password'] = 'encryptedpass';
   // res.redirect('/urls');
 });
 
@@ -280,9 +269,6 @@ app.post('/logout', (req, res) => {
   res.clearCookie('username');
   res.redirect('/login');
 });
-
-
-
 
 // if 404 err
 if (app.status === 404) {
