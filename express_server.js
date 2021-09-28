@@ -187,23 +187,33 @@ app.get("/", (req, res) => {
 // Log in and Register
 app.get('/login', (req, res) => {
   // if logged in
+  console.log('login', req.params);
+  let loginstatus = {};
+  loginstatus.cond = req.params.login;
   let pass = '';
   if (pass) {
     return 'login page';
   }
-  res.render('urls_login');
+  res.render('urls_login', loginstatus);
 });
 
 app.post('/login', (req, res) => {
   // if logged in
-  let pass = '';
-  if (pass) {
-    return 'login page';
+
+  console.log(req.body);
+  console.log(users[req.body.username].pass);
+  if (req.body.pass === users[req.body.username].pass) {
+
+    // console.log('login params',req.params);
+    // console.log('login body',req.body);
+    res.cookie('username',req.body.username);
+    res.redirect('/urls');
+    return;
   }
-  // console.log('login params',req.params);
-  // console.log('login body',req.body);
-  res.cookie('username',req.body.username);
-  res.redirect('/urls');
+  const loginstatus = {
+    cond:'wrong username or password'
+  };
+  res.render('urls_login',loginstatus);
 });
 
 // new user
