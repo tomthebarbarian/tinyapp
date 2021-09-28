@@ -54,7 +54,10 @@ app.get("/urls/new", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
-  res.render("urls_new");
+  const vals = {
+    username: req.cookies.username
+  };
+  res.render("urls_new", vals);
 });
 
 // delete a short url entry
@@ -93,7 +96,11 @@ app.get("/urls/:ids", (req, res) => {
   // console.log('curr urlids params',req.params);
   // console.log('curr  body',req.body);
   // console.log('url db', urlDatabase);
-  const templateVars = { shortURL: req.params.ids, longURL: urlDatabase[req.params.ids] };
+  const templateVars = {
+    username: req.cookies.username,
+    shortURL: req.params.ids,
+    longURL: urlDatabase[req.params.ids],
+  };
   res.render('urls_show', templateVars);
 });
 
