@@ -88,9 +88,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/urls/:ids", (req, res) => {
   // if not logged in
-  const pass = false;
-  if (pass) {
-    console.log('login');
+  if (req.cookies.username === undefined) {
     res.redirect('/login');
   }
   // console.log('curr urlids params',req.params);
@@ -108,9 +106,7 @@ app.get("/urls/:ids", (req, res) => {
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
   // if not logged in
-  const pass = false;
-  if (pass) {
-    console.log('login');
+  if (req.cookies.username === undefined) {
     res.redirect('/login');
   }
   urlDatabase[req.params.id] = req.body.updateURL;
@@ -123,11 +119,9 @@ app.post("/urls/:id", (req, res) => {
 // Redirect based on short address.
 app.get("/u/:id", (req, res) => {
   // if not logged in
-  const tempPromise = new Promise((resolve,reject) => {
-    resolve(req.params.shortURL);
-    // console.log('short url here',req.params.shortURL);
-    // console.log('param as whole',req.params);
-  });
+  if (req.cookies.username === undefined) {
+    res.redirect('/login');
+  }
   let currLong = urlDatabase[req.params.id];
   // console.log('past promise');
   if (currLong !== undefined) {
@@ -142,9 +136,8 @@ app.get("/u/:id", (req, res) => {
 // add a url
 app.post("/urls", (req, res) => {
   // if not logged in
-  const pass = '';
-  if (pass) {
-    res.redirect('/loginerr');
+  if (req.cookies.username === undefined) {
+    res.redirect('/login');
   }
   let currLong = req.body.longURL;
   // console.log("The Current long",currLong);  // Log the POST request body to the console
@@ -155,6 +148,11 @@ app.post("/urls", (req, res) => {
 
 // see url list
 app.get("/urls", (req, res) => {
+  console.log('in urls', req.cookie);
+  if (req.cookies.username === undefined) {
+    console.log('need to log in again')
+    res.redirect('/login');
+  }
   console.log(req.cookies.username);
   let currUrls = users[req.cookies.username];
   if (currUrls === undefined) {
@@ -174,14 +172,12 @@ app.get("/urls", (req, res) => {
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
+  if (req.cookies.username === undefined) {
+    res.redirect('/login');
+  }
   // res.send("Hello!");
   res.redirect('/urls');
   // if not logged in
-  console.log('Cookies: ', req.cookies);
-  const pass = '';
-  if (pass) {
-    res.redirect('/login');
-  }
 });
 
 // Log in and Register
@@ -190,11 +186,10 @@ app.get('/login', (req, res) => {
   console.log('login', req.params);
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  let pass = '';
-  if (pass) {
-    return 'login page';
+  if (req.cookies.username === undefined) {
+    res.render('urls_login', loginstatus);
   }
-  res.render('urls_login', loginstatus);
+  res.redirect('/urls');
 });
 
 app.post('/login', (req, res) => {
