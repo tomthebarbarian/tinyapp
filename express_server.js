@@ -148,9 +148,9 @@ app.post("/urls", (req, res) => {
 
 // see url list
 app.get("/urls", (req, res) => {
-  console.log('in urls', req.cookie);
+  // console.log('in urls', req.cookies);
   if (req.cookies.username === undefined) {
-    console.log('need to log in again')
+    console.log('need to log in again');
     res.redirect('/login');
   }
   console.log(req.cookies.username);
