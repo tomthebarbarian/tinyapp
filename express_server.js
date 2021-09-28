@@ -49,14 +49,16 @@ app.get("/urls.json", (req, res) => {
 // Making a new short url
 app.get("/urls/new", (req, res) => {
   // if not logged in
-  const pass = false;
-  if (pass) {
-    console.log('login');
+  const {username} = req.cookies;
+
+  if (username === undefined) {
     res.redirect('/login');
   }
+
   const vals = {
-    username: req.cookies.username
+    username
   };
+
   res.render("urls_new", vals);
 });
 
@@ -126,9 +128,19 @@ app.get("/u/:id", (req, res) => {
 // add a url
 app.post("/urls", (req, res) => {
   // if not logged in
-  if (req.cookies.username === undefined) {
+  const {username} = req.cookies;
+  // console.log(username);
+  if (username === undefined) {
     res.redirect('/login');
   }
+  // console.log('extracting correct', users[username]);
+
+  if (users[username].urls === undefined) {
+    // console.log('instide post urls', users[username]);
+    users[username].urls = {};
+  }
+  urlDatabase = users[username].urls;
+
   let currLong = req.body.longURL;
   // console.log("The Current long",currLong);  // Log the POST request body to the console
   const currShort = generateRandomString();
@@ -139,14 +151,16 @@ app.post("/urls", (req, res) => {
 // see url list
 app.get("/urls", (req, res) => {
   // console.log('in urls', req.cookies);
+  const {username} = req.cookies;
   if (req.cookies.username === undefined) {
     console.log('need to log in again');
     res.redirect('/login');
   }
-  console.log(req.cookies.username);
-  console.log(users);
-  console.log(users[req.cookies.username]);
-  let currUrls = users[req.cookies.username];
+  // console.log(username);
+  console.log('/urls/',users);
+  // console.log(users[username]);
+  let currUrls = users[username];
+
   if (currUrls === undefined) {
     currUrls = {};
   } else {
