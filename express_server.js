@@ -28,6 +28,7 @@ const users = {
   },
   russetyellows: {},
   theTankMan: {},
+  undefined:{},
 };
 // const urlDatabase = {
 //   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -155,7 +156,6 @@ app.post("/urls", (req, res) => {
 
 // see url list
 
-// users[currentUser].urls;
 
 app.get("/urls", (req, res) => {
   console.log(req.cookies.username);
@@ -212,6 +212,7 @@ app.post('/register', (req, res) => {
 // delete cookie
 app.post('/logout', (req, res) => {
   // if logged in
+  res.clearCookie('username');
   res.redirect('/urls');
 });
 
