@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <% if (username) { %>
-          <a class="nav-item nav-link"> <%= username %> </a>
+          <a class="nav-item nav-link"> Logged in as: <%= username %> </a>
         <% } else { %>
           <a class="nav-item nav-link">
             <form  action="/login" method="POST">

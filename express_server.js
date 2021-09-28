@@ -28,7 +28,6 @@ const users = {
   },
   russetyellows: {},
   theTankMan: {},
-  undefined:{},
 };
 // const urlDatabase = {
 //   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -155,13 +154,17 @@ app.post("/urls", (req, res) => {
 });
 
 // see url list
-
-
 app.get("/urls", (req, res) => {
   console.log(req.cookies.username);
+  let currUrls = users[req.cookies.username];
+  if (currUrls === undefined) {
+    currUrls = {};
+  } else {
+    currUrls = currUrls.urls;
+  }
   const templateVars = {
     username: req.cookies.username,
-    urls: users[req.cookies.username].urls,
+    urls: currUrls,
   };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
