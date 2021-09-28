@@ -79,24 +79,21 @@ app.get("/urls/:shortURL", (req, res) => {
 
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render('urls_show', templateVars);
-  // res.json(urlDatabase);
-  console.log('urls redir');
-  res.redirect("/u/:ids");
 });
 
 
 // Individidual short address pages
-app.get("/urls/:ids", (req, res) => {
-  // if not logged in
-  const pass = false;
-  if (pass) {
-    console.log('login');
-    res.redirect('/login');
-  }
-  
+// app.get("/urls/:ids", (req, res) => {
+//   // if not logged in
+//   const pass = false;
+//   if (pass) {
+//     console.log('login');
+//     res.redirect('/login');
+//   }
+// const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+// res.render('urls_show', templateVars);
 
-  res.redirect(urlDatabase[req.params.id]);
-});
+// });
 
 
 // Update an individual page for an id
@@ -107,8 +104,11 @@ app.post("/urls/:id", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
-  urlDatabase[req.params.id] = req.params.updateURL;
-  res.redirect('/urls/:id');
+  urlDatabase[req.params.id] = req.body.updateURL;
+  console.log('curr params',req.params);
+  console.log('curr body',req.body);
+  console.log('url db', urlDatabase);
+  res.redirect(`/urls/${req.params.id}`);
 });
 
 // Redirect based on short address.

@@ -84,9 +84,9 @@ if URL for the given ID does not exist:
 
 #### POST /urls
 
-if user is logged in:
-generates a short URL, saves it, and associates it with the user
-redirects to /urls/:id, where :id matches the ID of the newly saved URL
+if user is logged in: 
+generates a short URL, saves it, and associates it with the user DONE
+redirects to /urls/:id, where :id matches the ID of the newly saved URL DONE
 if user is not logged in:
 (Minor) 
 returns HTML with a relevant error message
