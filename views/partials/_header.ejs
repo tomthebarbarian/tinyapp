@@ -6,9 +6,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
+        <a class="nav-item nav-link"> <%= username %> </a>
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <a class="nav-item nav-link" href="/login">Login</a>
+        <a class="nav-item nav-link">
+          <form  action="/login" method="POST">
+            <div>
+              <label for="username">Login:</label>
+              <input class="form-control" type="text" name="username" placeholder="tomthebarb" style="width: 300px; margin: 1em">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </a>
+        
       </div>
     </div>
   </nav>

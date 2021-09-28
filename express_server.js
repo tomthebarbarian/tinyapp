@@ -29,14 +29,14 @@ const users = {
   russetyellows: {},
   theTankMan: {},
 };
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
-};
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com",
+// };
 
 let currentUser = 'tomthebarb';
 
-let currentUrls = users[currentUser].urls;
+let urlDatabase = users[currentUser].urls;
 
 
 // Requests
@@ -147,10 +147,18 @@ app.post("/urls", (req, res) => {
 });
 
 // see url list
+
+// users[currentUser].urls;
+
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase};
+  console.log(req.cookies.username);
+  const templateVars = {
+    username: req.cookies.username,
+    urls: users[req.cookies.username].urls,
+  };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
+  console.log(req.cookies);
 });
 
 
@@ -182,19 +190,22 @@ app.post('/login', (req, res) => {
   if (pass) {
     return 'login page';
   }
-  res.redirect('/ulrs');
+  // console.log('login params',req.params);
+  // console.log('login body',req.body);
+  res.cookie('username',req.body.username);
+  res.redirect('/urls');
 });
 
 // new user
 app.post('/register', (req, res) => {
   users[req.name]['password'] = 'encryptedpass';
-  res.redirect('/ulrs');
+  res.redirect('/urls');
 });
 
 // delete cookie
 app.post('/logout', (req, res) => {
   // if logged in
-  res.redirect('/ulrs');
+  res.redirect('/urls');
 });
 
 
