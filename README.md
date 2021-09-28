@@ -149,7 +149,7 @@ returns HTML with a relevant error message
 #### POST /register
 
 if email or password are empty:
-returns HTML with a relevant error message
+returns HTML with a relevant error message DONE
 
 if email already exists:
 returns HTML with a relevant error message DONE

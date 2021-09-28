@@ -153,7 +153,9 @@ app.get("/urls", (req, res) => {
     console.log('need to log in again');
     res.redirect('/login');
   }
-  // console.log(req.cookies.username);
+  console.log(req.cookies.username);
+  console.log(users);
+  console.log(users[req.cookies.username]);
   let currUrls = users[req.cookies.username];
   if (currUrls === undefined) {
     currUrls = {};
@@ -203,8 +205,16 @@ app.post('/login', (req, res) => {
   // if logged in
   // console.log(req.body);
   // console.log(users[req.body.username].pass);
-  if (req.body.pass === users[req.body.username].pass) {
+  if (!Object.keys(users).includes(req.body.username)) {
+    const loginstatus = {
+      cond:'username does not exist',
+      username: undefined
+    };
+    res.render('urls_login',loginstatus);
+    return;
+  }
 
+  if (req.body.pass === users[req.body.username].pass) {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
     res.cookie('username',req.body.username);
@@ -238,24 +248,27 @@ app.post('/register', (req, res) => {
     cond:'Existing Username',
     username: undefined
   };
+  let {username, pass} = req.body;
+
   if (Object.keys(users).includes(req.body.username)) {
     res.render('urls_register',loginstatus);
     return;
   }
-  if (req.body.username.length < 1) {
+  if (username.length < 1) {
     loginstatus.cond = 'Username is empty';
     res.render('urls_register',loginstatus);
     return;
   }
-  if (req.body.pass.length < 1) {
+  if (pass.length < 1) {
     loginstatus.cond = 'Password is empty';
     res.render('urls_register',loginstatus);
     return;
   }
 
-  
-
-
+  users[username] = {pass};
+  console.log(users);
+  res.cookie('username',req.body.username);
+  res.redirect('/urls');
 
   // users[req.name]['password'] = 'encryptedpass';
   // res.redirect('/urls');
