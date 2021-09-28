@@ -93,6 +93,8 @@ app.get("/urls/:ids", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
+  
+
   res.redirect(urlDatabase[req.params.id]);
 });
 
@@ -105,7 +107,8 @@ app.post("/urls/:id", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
-  urlDatabase[req.params.shortURL] = 'newvalue';
+  urlDatabase[req.params.id] = req.params.updateURL;
+  res.redirect('/urls/:id');
 });
 
 // Redirect based on short address.
