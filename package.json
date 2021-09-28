@@ -6,9 +6,29 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
-    "mocha": "^9.1.2"
-  }, 
+    "mocha": "^9.1.2",
+    "nodemon": "^2.0.13"
+  },
   "scripts": {
-    "test": "mocha"
-  }
+    "test": "mocha",
+    "dev": "nodemon"
+  },
+  "name": "TinyApp",
+  "description": "LHL first marked project, url shortener tinyapp",
+  "version": "1.0.0",
+  "main": "express_server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomthebarbarian/tinyapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomthebarbarian/tinyapp/issues"
+  },
+  "homepage": "https://github.com/tomthebarbarian/tinyapp#readme"
 }

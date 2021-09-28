@@ -79,7 +79,7 @@ app.get("/urls/:ids", (req, res) => {
     console.log('login');
     res.redirect('/login');
   }
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.id]);
 });
 
 
