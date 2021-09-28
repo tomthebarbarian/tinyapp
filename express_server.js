@@ -6,7 +6,7 @@ const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
-
+app.use(cookieParser());
 
 //
 
@@ -38,9 +38,6 @@ let currentUser = 'tomthebarb';
 
 let currentUrls = users[currentUser].urls;
 
-// Server listening;
-app.listen(PORT);
-console.log(`listening at ${PORT}`);
 
 // Requests
 
@@ -162,6 +159,7 @@ app.get("/", (req, res) => {
   // res.send("Hello!");
   res.redirect('/urls');
   // if not logged in
+  console.log('Cookies: ', req.cookies);
   const pass = '';
   if (pass) {
     res.redirect('/login');
@@ -208,3 +206,6 @@ if (app.status === 404) {
 }
 
 
+// Server listening;
+app.listen(PORT);
+console.log(`listening at ${PORT}`);
