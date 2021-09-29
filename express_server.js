@@ -26,14 +26,14 @@ const generateRandomString = uuid.v4().substr(0,6);
 // user db
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
-    let {id, pass} = searchData[elem];
+    let {email, pass} = searchData[elem];
     // if both user and pass
-    if (id === user) {
+    if (email === user) {
       // return true;
       if (pass === password) {
         return searchData[elem];
       }
-      return 'onlyuser';
+      return 'onlyemail';
     }
   }
   return false;
@@ -58,16 +58,16 @@ const userfinder = (user, password, searchData) => {
 const users = {
   'xckdkl': {
     pass:'password',
-    id:'tempid',
+    id:'xckdkl',
     email: 'me@we.com',
   },
   'slkdls': {
-    id: 'russetyellows',
+    id: 'slkdls',
     pass: 'qwerty',
     email: 'abc@123.com',
   },
   'abcdef': {
-    id: 'tomthebarb',
+    id: 'abcdef',
     pass: 'asdfg',
     email: '123@123.com',
 
@@ -303,15 +303,16 @@ app.post('/register', (req, res) => {
     username: undefined
   };
   let {username, pass} = req.body;
+
   const existing = userfinder(username, pass, users);
   let curruid = generateRandomString();
 
-  if (Object.keys(users).includes(req.body.username)) {
+  if (existing) {
     res.render('urls_register',loginstatus);
     return;
   }
   if (username.length < 1) {
-    loginstatus.cond = 'Username is empty';
+    loginstatus.cond = 'Email is empty';
     res.render('urls_register',loginstatus);
     return;
   }
@@ -321,9 +322,13 @@ app.post('/register', (req, res) => {
     return;
   }
 
-  users[username] = {pass};
+  users[curruid] = {
+    id: curruid,
+    pass,
+    email: username,
+  };
   console.log(users);
-  res.cookie('username',req.body.username);
+  res.cookie('username',username);
   res.redirect('/urls');
 
   // res.redirect('/urls');
