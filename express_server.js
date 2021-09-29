@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const generateRandomString = () => uuid.v4().substr(0,6);
 
-// Find if user and pass of input are equivalent to values in 
+// Find if user and pass of input are equivalent to values in
 // user db
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
@@ -78,8 +78,6 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
-let currentUser = 'tomthebarb';
-
 // Server listening;
 app.listen(PORT);
 console.log(`listening at ${PORT}`);
@@ -127,14 +125,14 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/urls/:ids", (req, res) => {
   // if not logged in
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     res.redirect('/login');
   }
   // console.log('curr urlids params',req.params);
   // console.log('curr  body',req.body);
   // console.log('url db', urlDatabase);
   const templateVars = {
-    username: req.cookies.username,
+    username: req.cookies.user_id,
     shortURL: req.params.ids,
     longURL: urlDatabase[req.params.ids],
   };
@@ -145,7 +143,7 @@ app.get("/urls/:ids", (req, res) => {
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
   // if not logged in
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     res.redirect('/login');
   }
   urlDatabase[req.params.id] = req.body.updateURL;
@@ -158,7 +156,7 @@ app.post("/urls/:id", (req, res) => {
 // Redirect based on short address.
 app.get("/u/:id", (req, res) => {
   // if not logged in
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     res.redirect('/login');
   }
   let currLong = urlDatabase[req.params.id];
@@ -198,7 +196,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls", (req, res) => {
   // console.log('in urls', req.cookies);
   const {username} = req.cookies;
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     console.log('need to log in again');
     res.redirect('/login');
   }
@@ -213,7 +211,7 @@ app.get("/urls", (req, res) => {
     currUrls = currUrls.urls;
   }
   const templateVars = {
-    username: req.cookies.username,
+    username: req.cookies.user_id,
     urls: currUrls,
   };
   res.render('urls_index', templateVars);
@@ -225,7 +223,7 @@ app.get("/urls", (req, res) => {
 // redirect to appropriate start page
 app.get("/", (req, res) => {
 
-  if (req.cookies.username !== undefined) {
+  if (req.cookies.user_id !== undefined) {
     console.log('starturls');
     res.redirect('/urls');
     return;
@@ -246,9 +244,9 @@ app.get('/login', (req, res) => {
   // try with flag
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = req.cookies.username;
+  loginstatus.username = req.cookies.user_id;
   // console.log('can we do cookies?', req.cookies);
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     // console.log('rendering login');
     res.render('urls_login', loginstatus);
     return;
@@ -269,7 +267,7 @@ app.post('/login', (req, res) => {
   if (typeof userfinder(username, pass, users) === 'object') {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
-    res.cookie('username',username);
+    res.cookie('user_id',username);
     res.redirect('/urls');
     return;
   }
@@ -277,7 +275,9 @@ app.post('/login', (req, res) => {
   const loginstatus = {
     cond:'wrong username or password',
     username: undefined
+    
   };
+  res.status(403);
   res.render('urls_login',loginstatus);
 });
 
@@ -286,9 +286,9 @@ app.get('/register', (req, res) => {
   // console.log('in register now');
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = req.cookies.username;
+  loginstatus.username = req.cookies.user_id;
 
-  if (req.cookies.username === undefined) {
+  if (req.cookies.user_id === undefined) {
     res.render('urls_register', loginstatus);
     return;
   }
@@ -313,11 +313,13 @@ app.post('/register', (req, res) => {
   }
   if (username.length < 1) {
     loginstatus.cond = 'Email is empty';
+    res.status(400);
     res.render('urls_register',loginstatus);
     return;
   }
   if (pass.length < 1) {
     loginstatus.cond = 'Password is empty';
+    res.status(400);
     res.render('urls_register',loginstatus);
     return;
   }
@@ -328,7 +330,7 @@ app.post('/register', (req, res) => {
     email: username,
   };
   console.log(users);
-  res.cookie('username',username);
+  res.cookie('user_id',username);
   res.redirect('/urls');
 
   // res.redirect('/urls');
@@ -337,7 +339,7 @@ app.post('/register', (req, res) => {
 // delete cookie
 app.post('/logout', (req, res) => {
   // if logged in
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/login');
 });
 
