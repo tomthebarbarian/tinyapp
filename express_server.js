@@ -291,11 +291,19 @@ app.post('/login', (req, res) => {
 app.get('/register', (req, res) => {
   
   // console.log('in register now');
+<<<<<<< HEAD
   let loginstatus = {
     cond: undefined,
     username: undefined,
   };
   if (req.session.user_id === undefined) {
+=======
+  let loginstatus = {};
+  loginstatus.cond = req.params.login;
+  loginstatus.username = users[user_id];
+
+  if (req.cookies.user_id === undefined) {
+>>>>>>> 0764131 (implemented hash password checking)
     res.render('urls_register', loginstatus);
     return;
   }
