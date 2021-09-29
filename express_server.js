@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Helpers
 
 
-const generateRandomString = uuid.v4().substr(0,6);
+const generateRandomString = () => uuid.v4().substr(0,6);
 
 // Find if user and pass of input are equivalent to values in 
 // user db
@@ -299,7 +299,7 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
   console.log(req.body);
   const loginstatus = {
-    cond:'Existing Username',
+    cond:'Existing User',
     username: undefined
   };
   let {username, pass} = req.body;
