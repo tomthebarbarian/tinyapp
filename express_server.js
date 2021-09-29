@@ -31,7 +31,7 @@ const userfinder = (user, password, searchData) => {
     // if both user and pass
     if (email === user) {
       // return true;
-      if (pass === password) {
+      if (bcrypt.compareSync(password, pass)) {
         return searchData[elem];
       }
       return 'onlyemail';
@@ -312,7 +312,7 @@ app.get('/register', (req, res) => {
   // console.log('in register now');
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = users[user_id].email;
+  loginstatus.username = users[user_id];
 
   if (req.cookies.user_id === undefined) {
     res.render('urls_register', loginstatus);
