@@ -352,7 +352,7 @@ app.post('/register', (req, res) => {
 
   users[curruid] = {
     id: curruid,
-    pass,
+    pass : bcrypt.hashSync(pass, 10),
     email: username,
   };
   console.log(users);
