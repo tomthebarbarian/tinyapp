@@ -4,15 +4,14 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const uuid = require('uuid');
 
-
 const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
 app.use(cookieParser());
-app.use(morgan);
+// app.use(morgan);
 
-//
+// morgan('tiny')
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,42 +22,64 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const generateRandomString = uuid.v4().substr(0,6);
 
-// function() {
-//   return Math.random().toString(36).substring(2, 8);
-// };
-
-const authIdfinder = (id, searchData) => {
+// Find if user and pass of input are equivalent to values in 
+// user db
+const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
-    if (elem === id) {
-      return true;
-    } else {
-      return false;
+    let {id, pass} = searchData[elem];
+
+    if (password === pass && id === user) {
+      // return true;
+      return searchData[elem];
     }
   }
+  return false;
 };
+
+// shorturls access
+// const urlfinder = (id, comparison, searchData) => {
+//   for (let elem in searchData) {
+//     if (elem === id) {
+//       // return true;
+//       if (searchData[id][comparison] = )
+//       return searchData[elem];
+//     } else {
+//       return false;
+//     }
+//   }
+// };
 
 // Constants
 
+
 const users = {
-  tomthebarb: {
+  'xckdkl': {
     pass:'password',
-    urls:{
-      "b2xVn2": "http://www.lighthouselabs.ca",
-      "9sm5xK": "http://www.google.com",
-    }
+    id:'tempid',
+    email: 'me@we.com',
   },
-  russetyellows: {},
-  theTankMan: {},
+  'slkdls': {
+    id: 'russetyellows',
+    pass: 'qwerty',
+    email: 'abc@123.com',
+  },
+  'abcdef': {
+    id: 'tomthebarb',
+    pass: 'asdfg',
+    email: '123@123.com',
+
+  },
 };
-// const urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com",
-// };
+const urlDatabase = {
+  "b2xVn2": "http://www.lighthouselabs.ca",
+  "9sm5xK": "http://www.google.com",
+};
 
 let currentUser = 'tomthebarb';
 
-let urlDatabase = users[currentUser].urls;
-
+// Server listening;
+app.listen(PORT);
+console.log(`listening at ${PORT}`);
 
 // Requests
 // just read the db
@@ -202,15 +223,20 @@ app.get("/urls", (req, res) => {
 app.get("/", (req, res) => {
 
   if (req.cookies.username !== undefined) {
+    console.log('starturls');
     res.redirect('/urls');
+    return;
   }
   // if not logged in
+  console.log('start login');
   res.redirect('/login');
   // res.send("Hello!");
   
 });
 
 // Log in and Register
+
+// just login
 app.get('/login', (req, res) => {
   // if logged in
   // console.log('login', req.params);
@@ -233,33 +259,18 @@ app.post('/login', (req, res) => {
   // if logged in
   // console.log(req.body);
   // console.log(users[req.body.username].pass);
-  const {username} = req.body;
+  const {username, pass} = req.body;
 
-  if (!Object.keys(users).includes(username)) {
-    const loginstatus = {
-      cond:'username does not exist',
-      username: undefined
-    };
-    res.render('urls_login',loginstatus);
-    return;
-  }
-
-  if (!Object.keys(users).includes(username)) {
-    const loginstatus = {
-      cond:'username does not exist',
-      username: undefined
-    };
-    res.render('urls_login',loginstatus);
-    return;
-  }
-
-  if (req.body.pass === users[username].pass) {
+  // case1
+  
+  if (userfinder(username, pass, users)) {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
     res.cookie('username',username);
     res.redirect('/urls');
     return;
   }
+  // case4
   const loginstatus = {
     cond:'wrong username or password',
     username: undefined
@@ -326,6 +337,3 @@ if (app.status === 404) {
 }
 
 
-// Server listening;
-app.listen(PORT);
-console.log(`listening at ${PORT}`);
