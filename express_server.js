@@ -123,12 +123,15 @@ app.get("/urls/new", (req, res) => {
 
 // delete a short url entry
 app.post("/urls/:shortURL/delete", (req, res) => {
-  
+  const {user_id} = req.cookies;
   // res.redirect(urlDatabase[req.params.shortURL]);
-
   const currShort = req.params.shortURL;
+  // console.log('logged in', user_id);
+  // console.log('ownerid', (urlDatabase[currShort].userID));
+  if (urlDatabase[currShort].userID === user_id) {
+    delete urlDatabase[currShort];
+  }
   // console.log(currShort);
-  delete urlDatabase[currShort];
 
   // fix here
   // res.json(urlDatabase);
@@ -161,10 +164,13 @@ app.get("/urls/:ids", (req, res) => {
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
   // if not logged in
+  const user_id = req.cookies;
   if (req.cookies.user_id === undefined) {
     res.redirect('/login');
   }
-  urlDatabase[req.params.id].longURL = req.body.updateURL;
+  if (urlDatabase[req.params.id].userID === user_id) {
+    urlDatabase[req.params.id].longURL = req.body.updateURL;
+  }
   // console.log('curr params',req.params);
   // console.log('curr body',req.body);
   // console.log('url db', urlDatabase);
@@ -296,6 +302,7 @@ app.post('/login', (req, res) => {
 
 // new user
 app.get('/register', (req, res) => {
+  const {user_id} = req.cookies;
   // console.log('in register now');
   let loginstatus = {};
   loginstatus.cond = req.params.login;
