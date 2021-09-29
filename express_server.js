@@ -13,10 +13,11 @@ app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({extended: true}));
 
+
+// Helpers
 const generateRandomString = function() {
   return Math.random().toString(36).substring(2, 8);
 };
-
 
 const users = {
   tomthebarb: {
@@ -40,7 +41,6 @@ let urlDatabase = users[currentUser].urls;
 
 
 // Requests
-
 // just read the db
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -69,6 +69,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
   const currShort = req.params.shortURL;
   delete urlDatabase[currShort];
+
+  // fix here
+  delete users[currShort].urls;
 
   // res.json(urlDatabase);
   console.log('urls delete');
@@ -120,7 +123,6 @@ app.get("/u/:id", (req, res) => {
     console.log('currLong', currLong);
     console.log(urlDatabase);
     res.redirect(`${currLong}`);
-    
   }
 });
 
@@ -192,6 +194,7 @@ app.get("/", (req, res) => {
 app.get('/login', (req, res) => {
   // if logged in
   // console.log('login', req.params);
+  // try with flag
   let loginstatus = {};
   loginstatus.cond = req.params.login;
   loginstatus.username = req.cookies.username;
@@ -204,6 +207,7 @@ app.get('/login', (req, res) => {
   // console.log('also going to urls?');
   res.redirect('/urls');
 });
+
 
 app.post('/login', (req, res) => {
   // if logged in
