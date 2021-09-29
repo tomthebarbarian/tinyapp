@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 app.use(cookieParser());
 // app.use(morgan);
 
-// morgan('tiny')
+morgan('tiny');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,10 +27,13 @@ const generateRandomString = uuid.v4().substr(0,6);
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
     let {id, pass} = searchData[elem];
-
-    if (password === pass && id === user) {
+    // if both user and pass
+    if (id === user) {
       // return true;
-      return searchData[elem];
+      if (pass === password) {
+        return searchData[elem];
+      }
+      return 'onlyuser';
     }
   }
   return false;
@@ -263,7 +266,7 @@ app.post('/login', (req, res) => {
 
   // case1
   
-  if (userfinder(username, pass, users)) {
+  if (typeof userfinder(username, pass, users) === 'object') {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
     res.cookie('username',username);
@@ -300,6 +303,8 @@ app.post('/register', (req, res) => {
     username: undefined
   };
   let {username, pass} = req.body;
+  const existing = userfinder(username, pass, users);
+  let curruid = generateRandomString();
 
   if (Object.keys(users).includes(req.body.username)) {
     res.render('urls_register',loginstatus);
