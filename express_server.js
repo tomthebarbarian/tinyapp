@@ -167,7 +167,7 @@ app.get("/urls/:ids", (req, res) => {
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
   // if not logged in
-  const user_id = req.cookies;
+  const {user_id} = req.cookies;
   if (req.cookies.user_id === undefined) {
     res.status(403);
     res.redirect('/login');
