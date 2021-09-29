@@ -74,8 +74,14 @@ const users = {
   },
 };
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: 'xckdkl'
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: 'xckdkl',
+  },
 };
 
 // Server listening;
@@ -91,14 +97,14 @@ app.get("/urls.json", (req, res) => {
 // Making a new short url
 app.get("/urls/new", (req, res) => {
   // if not logged in
-  const {username} = req.cookies;
+  const {user_id} = req.cookies;
 
-  if (username === undefined) {
+  if (user_id === undefined) {
     res.redirect('/login');
   }
 
   const vals = {
-    username
+    user_id
   };
 
   res.render("urls_new", vals);
@@ -132,9 +138,9 @@ app.get("/urls/:ids", (req, res) => {
   // console.log('curr  body',req.body);
   // console.log('url db', urlDatabase);
   const templateVars = {
-    username: req.cookies.user_id,
+    user_id: req.cookies.user_id,
     shortURL: req.params.ids,
-    longURL: urlDatabase[req.params.ids],
+    longURL: urlDatabase[req.params.ids].longURL,
   };
   res.render('urls_show', templateVars);
 });
@@ -146,7 +152,7 @@ app.post("/urls/:id", (req, res) => {
   if (req.cookies.user_id === undefined) {
     res.redirect('/login');
   }
-  urlDatabase[req.params.id] = req.body.updateURL;
+  urlDatabase[req.params.id].longURL = req.body.updateURL;
   // console.log('curr params',req.params);
   // console.log('curr body',req.body);
   // console.log('url db', urlDatabase);
@@ -172,38 +178,32 @@ app.get("/u/:id", (req, res) => {
 // add a url
 app.post("/urls", (req, res) => {
   // if not logged in
-  const {username} = req.cookies;
+  const {user_id} = req.cookies;
   // console.log(username);
-  if (username === undefined) {
+  if (user_id === undefined) {
     res.redirect('/login');
   }
-  // console.log('extracting correct', users[username]);
-
-  if (users[username].urls === undefined) {
-    // console.log('instide post urls', users[username]);
-    users[username].urls = {};
-  }
-  urlDatabase = users[username].urls;
-
-  let currLong = req.body.longURL;
-  // console.log("The Current long",currLong);  // Log the POST request body to the console
   const currShort = generateRandomString();
-  urlDatabase[currShort] = currLong;
+  let currLong = req.body.longURL;
+  urlDatabase[currShort] = {
+    longURL: currLong,
+    userID: user_id,
+  };
   res.redirect(`/urls/${currShort}`);
 });
 
-// see url list
+// see url LIST
 app.get("/urls", (req, res) => {
   // console.log('in urls', req.cookies);
-  const {username} = req.cookies;
+  const {user_id} = req.cookies;
   if (req.cookies.user_id === undefined) {
     console.log('need to log in again');
     res.redirect('/login');
   }
-  // console.log(username);
+  // console.log(user_id);
   console.log('/urls/',users);
-  // console.log(users[username]);
-  let currUrls = users[username];
+  // console.log(users[user_id]);
+  let currUrls = urlDatabase;
 
   if (currUrls === undefined) {
     currUrls = {};
@@ -211,8 +211,8 @@ app.get("/urls", (req, res) => {
     currUrls = currUrls.urls;
   }
   const templateVars = {
-    username: req.cookies.user_id,
-    urls: currUrls,
+    user_id: req.cookies.user_id,
+    urls: urlDatabase,
   };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
@@ -244,7 +244,7 @@ app.get('/login', (req, res) => {
   // try with flag
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = req.cookies.user_id;
+  loginstatus.user_id = req.cookies.user_id;
   // console.log('can we do cookies?', req.cookies);
   if (req.cookies.user_id === undefined) {
     // console.log('rendering login');
@@ -274,7 +274,7 @@ app.post('/login', (req, res) => {
   // case4
   const loginstatus = {
     cond:'wrong username or password',
-    username: undefined
+    user_id: undefined
     
   };
   res.status(403);
@@ -286,7 +286,7 @@ app.get('/register', (req, res) => {
   // console.log('in register now');
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = req.cookies.user_id;
+  loginstatus.user_id = req.cookies.user_id;
 
   if (req.cookies.user_id === undefined) {
     res.render('urls_register', loginstatus);
