@@ -6,8 +6,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <% if (user_id) { %>
-          <a class="nav-item nav-link"> Logged in as: <%= user_id %> </a>
+        <% if (username) { %>
+          <a class="nav-item nav-link"> Logged in as: <%= username %> </a>
           <a class="nav-item nav-link">
             <form  action="/logout" method="POST">
               <button type="submit" class="btn btn-primary">logout</button>

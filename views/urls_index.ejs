@@ -24,6 +24,9 @@
         </tr>
       </thead>
       <tbody>
+        <% if (cond) { %>
+         <%= cond %> 
+        <% } else {%>
         <% for(let url in urls) { %>
           <tr>
             <td><%= url %></td>
@@ -39,7 +42,7 @@
               </form>
             </td>
           </tr>
-        <% } %>
+        <% }} %>
       </tbody>
     </table>
   </main>

@@ -39,6 +39,17 @@ const userfinder = (user, password, searchData) => {
   return false;
 };
 
+// returns object only containing url objects where userID === id
+const urlsForUser = (id, searchData) => {
+  const ansObj = {};
+  for (let elem in searchData) {
+    if (searchData[elem].userID === id) {
+      ansObj[elem] = searchData[elem];
+    }
+  }
+  return ansObj;
+};
+
 // shorturls access
 // const urlfinder = (id, comparison, searchData) => {
 //   for (let elem in searchData) {
@@ -104,7 +115,7 @@ app.get("/urls/new", (req, res) => {
   }
 
   const vals = {
-    user_id
+    username: users[user_id].email,
   };
 
   res.render("urls_new", vals);
@@ -116,13 +127,12 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   // res.redirect(urlDatabase[req.params.shortURL]);
 
   const currShort = req.params.shortURL;
+  // console.log(currShort);
   delete urlDatabase[currShort];
 
   // fix here
-  delete users[currShort].urls;
-
   // res.json(urlDatabase);
-  console.log('urls delete');
+  // console.log('urls delete');
   res.redirect("/urls");
 });
 
@@ -131,14 +141,16 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/urls/:ids", (req, res) => {
   // if not logged in
-  if (req.cookies.user_id === undefined) {
+  const {user_id} = req.cookies;
+  if (user_id === undefined) {
     res.redirect('/login');
   }
   // console.log('curr urlids params',req.params);
   // console.log('curr  body',req.body);
+  console.log('id of url',req.params);
   // console.log('url db', urlDatabase);
   const templateVars = {
-    user_id: req.cookies.user_id,
+    username: users[user_id].email,
     shortURL: req.params.ids,
     longURL: urlDatabase[req.params.ids].longURL,
   };
@@ -191,24 +203,27 @@ app.post("/urls", (req, res) => {
 // see url LIST
 app.get("/urls", (req, res) => {
   // console.log('in urls', req.cookies);
+  // not logged in
   const {user_id} = req.cookies;
+  const usersUrls = urlsForUser(user_id, urlDatabase);
   if (req.cookies.user_id === undefined) {
     console.log('need to log in again');
-    res.redirect('/login');
+    // res.redirect('/login');
+    const templateVars = {
+      username: users[user_id].email,
+      urls: usersUrls,
+      cond: 'Must be logged in to see urls',
+    };
+    res.render('urls_index', templateVars);
+    return;
   }
   // console.log(user_id);
-  console.log('/urls/',users);
-  // console.log(users[user_id]);
-  let currUrls = urlDatabase;
+  console.log('/urls/',usersUrls);
 
-  if (currUrls === undefined) {
-    currUrls = {};
-  } else {
-    currUrls = currUrls.urls;
-  }
   const templateVars = {
-    user_id: req.cookies.user_id,
-    urls: urlDatabase,
+    username: users[user_id].email,
+    urls: usersUrls,
+    cond: undefined,
   };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
@@ -240,7 +255,7 @@ app.get('/login', (req, res) => {
   // try with flag
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.user_id = req.cookies.user_id;
+  loginstatus.username = req.cookies.user_id;
   // console.log('can we do cookies?', req.cookies);
   if (req.cookies.user_id === undefined) {
     // console.log('rendering login');
@@ -259,18 +274,20 @@ app.post('/login', (req, res) => {
   const {username, pass} = req.body;
 
   // case1
-  
-  if (typeof userfinder(username, pass, users) === 'object') {
+  const currUser = userfinder(username, pass, users);
+
+
+  if (typeof  currUser === 'object') {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
-    res.cookie('user_id',username);
+    res.cookie('user_id',currUser.id);
     res.redirect('/urls');
     return;
   }
   // case4
   const loginstatus = {
     cond:'wrong username or password',
-    user_id: undefined
+    username: undefined
     
   };
   res.status(403);
@@ -282,7 +299,7 @@ app.get('/register', (req, res) => {
   // console.log('in register now');
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.user_id = req.cookies.user_id;
+  loginstatus.username = users[user_id].email;
 
   if (req.cookies.user_id === undefined) {
     res.render('urls_register', loginstatus);
@@ -326,7 +343,7 @@ app.post('/register', (req, res) => {
     email: username,
   };
   console.log(users);
-  res.cookie('user_id',username);
+  res.cookie('user_id',curruid);
   res.redirect('/urls');
 
   // res.redirect('/urls');
