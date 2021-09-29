@@ -111,6 +111,7 @@ app.get("/urls/new", (req, res) => {
   const {user_id} = req.cookies;
 
   if (user_id === undefined) {
+    res.status(403);
     res.redirect('/login');
   }
 
@@ -146,6 +147,7 @@ app.get("/urls/:ids", (req, res) => {
   // if not logged in
   const {user_id} = req.cookies;
   if (user_id === undefined) {
+    res.status(403);
     res.redirect('/login');
   }
   // console.log('curr urlids params',req.params);
@@ -166,6 +168,7 @@ app.post("/urls/:id", (req, res) => {
   // if not logged in
   const user_id = req.cookies;
   if (req.cookies.user_id === undefined) {
+    res.status(403);
     res.redirect('/login');
   }
   if (urlDatabase[req.params.id].userID === user_id) {
@@ -195,6 +198,7 @@ app.post("/urls", (req, res) => {
   const {user_id} = req.cookies;
   // console.log(username);
   if (user_id === undefined) {
+    res.status(403);
     res.redirect('/login');
   }
   const currShort = generateRandomString();
@@ -220,6 +224,7 @@ app.get("/urls", (req, res) => {
       urls: usersUrls,
       cond: 'Must be logged in to see urls',
     };
+    res.status(403);
     res.render('urls_index', templateVars);
     return;
   }
