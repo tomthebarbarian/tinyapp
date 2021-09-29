@@ -1,12 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const uuid = require('uuid');
+
 
 const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
 app.use(cookieParser());
+app.use(morgan);
 
 //
 
@@ -15,9 +19,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 // Helpers
-const generateRandomString = function() {
-  return Math.random().toString(36).substring(2, 8);
+
+
+const generateRandomString = uuid.v4().substr(0,6);
+
+// function() {
+//   return Math.random().toString(36).substring(2, 8);
+// };
+
+const authIdfinder = (id, searchData) => {
+  for (let elem in searchData) {
+    if (elem === id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 };
+
+// Constants
 
 const users = {
   tomthebarb: {
