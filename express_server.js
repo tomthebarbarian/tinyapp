@@ -161,11 +161,7 @@ app.post("/urls/:id", (req, res) => {
 
 // Redirect based on short address.
 app.get("/u/:id", (req, res) => {
-  // if not logged in
-  if (req.cookies.user_id === undefined) {
-    res.redirect('/login');
-  }
-  let currLong = urlDatabase[req.params.id];
+  let currLong = urlDatabase[req.params.id].longURL;
   // console.log('past promise');
   if (currLong !== undefined) {
     console.log('currLong', currLong);
