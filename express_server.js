@@ -19,17 +19,31 @@ app.use(cookieSession({
 
 morgan('tiny');
 
+// Logged in check
+// if cookie doesn't exist go back to login page.
+app.use((req, res, next) => {
+  const {user_id} = req.session;
+  const path = req.path;
+  if (
+    user_id === undefined &&
+    path !== '/login' &&
+    path !== '/register'
+  )  {
+    res.status(403);
+    res.redirect('/login');
+  }
+  next();
+});
+
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 
 // Helpers
-
-
 const generateRandomString = () => uuid.v4().substr(0,6);
 
 // Find if user and pass of input are equivalent to values in
-// user db
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
     let {email, pass} = searchData[elem];
@@ -56,22 +70,8 @@ const urlsForUser = (id, searchData) => {
   return ansObj;
 };
 
-// shorturls access
-// const urlfinder = (id, comparison, searchData) => {
-//   for (let elem in searchData) {
-//     if (elem === id) {
-//       // return true;
-//       if (searchData[id][comparison] = )
-//       return searchData[elem];
-//     } else {
-//       return false;
-//     }
-//   }
-// };
-
 // Constants
-
-
+// usersobj
 const users = {
   'xckdkl': {
     pass:bcrypt.hashSync('password', 10),//password
@@ -90,6 +90,7 @@ const users = {
 
   },
 };
+// urls obj
 const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca",
@@ -115,51 +116,29 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
-
-  if (user_id === undefined) {
-    res.status(403);
-    res.redirect('/login');
-  }
-
-  const vals = {
+  const templateVars = {
     username: users[user_id].email,
   };
-
-  res.render("urls_new", vals);
+  res.render("urls_new", templateVars);
 });
 
 // delete a short url entry
 app.post("/urls/:shortURL/delete", (req, res) => {
   const {user_id} = req.session;
-  // res.redirect(urlDatabase[req.params.shortURL]);
   const currShort = req.params.shortURL;
-  // console.log('logged in', user_id);
-  // console.log('ownerid', (urlDatabase[currShort].userID));
   if (urlDatabase[currShort].userID === user_id) {
     delete urlDatabase[currShort];
   }
-  // console.log(currShort);
-
-  // fix here
-  // res.json(urlDatabase);
-  // console.log('urls delete');
   res.redirect("/urls");
 });
 
 
 // Individidual short address pages
-
 app.get("/urls/:ids", (req, res) => {
   // if not logged in
+  // Display url
   const {user_id} = req.session;
-  if (user_id === undefined) {
-    res.status(403);
-    res.redirect('/login');
-  }
-  // console.log('curr urlids params',req.params);
-  // console.log('curr  body',req.body);
-  console.log('id of url',req.params);
-  // console.log('url db', urlDatabase);
+
   const templateVars = {
     username: users[user_id].email,
     shortURL: req.params.ids,
@@ -173,10 +152,6 @@ app.get("/urls/:ids", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
-  if (req.session.user_id === undefined) {
-    res.status(403);
-    res.redirect('/login');
-  }
   if (urlDatabase[req.params.id].userID === user_id) {
     urlDatabase[req.params.id].longURL = req.body.updateURL;
   }
@@ -200,15 +175,8 @@ app.get("/u/:id", (req, res) => {
 
 // add a url
 app.post("/urls", (req, res) => {
-  // if not logged in
-  const {user_id} = req.session;
-  
-  // console.log(username);
-  if (user_id === undefined) {
-    res.status(403);
-    res.redirect('/login');
-  }
   const currShort = generateRandomString();
+  const {user_id} = req.session;
   let currLong = req.body.longURL;
   urlDatabase[currShort] = {
     longURL: currLong,
@@ -229,7 +197,7 @@ app.get("/urls", (req, res) => {
   console.log('main urls', user_id);
 
   if (req.session.user_id === undefined) {
-    console.log('url list need to log in again');
+    // console.log('url list need to log in again');
     // res.redirect('/login');
     const templateVars = {
       username: undefined,
@@ -297,17 +265,11 @@ app.post('/login', (req, res) => {
   // console.log(req.body);
   // console.log(users[req.body.username].pass);
   const {username, pass} = req.body;
-
   // case1
   const currUser = userfinder(username, pass, users);
-  // console.log(currUser);
 
   if (typeof  currUser === 'object') {
-    // console.log('login params',req.params);
-    // console.log('login body',req.body);
-
     req.session.user_id = currUser.id;
-    // res.cookie('user_id',currUser.id);
     res.redirect('/urls');
     return;
   }
@@ -329,7 +291,6 @@ app.get('/register', (req, res) => {
     cond: undefined,
     username: undefined,
   };
-
   if (req.session.user_id === undefined) {
     res.render('urls_register', loginstatus);
     return;
@@ -365,7 +326,6 @@ app.post('/register', (req, res) => {
     res.render('urls_register',loginstatus);
     return;
   }
-
   users[curruid] = {
     id: curruid,
     pass : bcrypt.hashSync(pass, 10),
@@ -373,10 +333,8 @@ app.post('/register', (req, res) => {
   };
   // console.log(users);
   req.session.user_id = curruid;
-  console.log('here is cookie id ', req.session.user_id);
+  // console.log('here is cookie id ', req.session.user_id);
   res.redirect('/urls');
-
-  // res.redirect('/urls');
 });
 
 // delete cookie
