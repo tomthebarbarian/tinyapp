@@ -183,8 +183,6 @@ app.get("/u/:id", (req, res) => {
   }
   let currLong = currUrl.longURL;
   if (currLong !== undefined) {
-    // console.log('currLong', currLong);
-    // console.log(urlDatabase);
     res.redirect(`${currLong}`);
   }
 });
@@ -234,17 +232,14 @@ app.get("/urls", (req, res) => {
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
-  // let cursession = req.session;
   console.log(req.session.user_id);
   if (req.session.user_id !== undefined) {
-    // console.log('starturls');
     res.redirect('/urls');
     return;
   }
   // if not logged in
   console.log('start login');
   res.redirect('/login');
-  // res.send("Hello!");
   
 });
 
@@ -259,8 +254,6 @@ app.get('/login', (req, res) => {
     console.log(req.status);
     loginstatus.code = 'must be logged in';
   }
-  // console.log('can we do cookies?', req.session);
-
   if (loginstatus.username === undefined) {
     res.render('urls_login', loginstatus);
     return;
@@ -305,7 +298,6 @@ app.get('/register', (req, res) => {
 
 // register post
 app.post('/register', (req, res) => {
-  // console.log(req.body);
   const loginstatus = {
     cond:'Existing User',
     username: undefined
