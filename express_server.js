@@ -29,7 +29,8 @@ app.use((req, res, next) => {
     path !== '/login' &&
     path !== '/register' &&
     path !== '/urls' &&
-    path.slice(0,4) !== '/url'
+    path.slice(0,4) !== '/url' &&
+    path.slice(0,2) !== '/u'
   ) {
     res.status(403);
     res.redirect('/login');
@@ -104,10 +105,21 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   const {user_id} = req.session;
   const currShort = req.params.shortURL;
+  // not logged in
+  const templateVars = {
+    username: undefined,
+    cond: 'Must Own Url to delete'
+  };
+  if (!user_id) {
+    templateVars.cond = 'Must be logged in to delete urls';
+  }
+  // Logged in own
   if (urlDatabase[currShort].userID === user_id) {
     delete urlDatabase[currShort];
+    res.redirect("/urls");
   }
-  res.redirect("/urls");
+  res.render('urls_index', templateVars);
+
 });
 
 
@@ -121,7 +133,7 @@ app.get("/urls/:ids", (req, res) => {
   const inId = req.params.ids;
 
   // Not logged in
-  if (req.session.user_id === undefined) {
+  if (user_id === undefined) {
     templateVars.cond = 'Not logged in';
   } else if (!Object.keys(urlDatabase).includes(inId)) {
   // Doesn't exist
@@ -144,18 +156,41 @@ app.get("/urls/:ids", (req, res) => {
 app.post("/urls/:id", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
-  if (urlDatabase[req.params.id].userID === user_id) {
-    urlDatabase[req.params.id].longURL = req.body.updateURL;
+  const templateVars = {
+    username : user_id
+  };
+  const inId = req.params.id;
+  // Can update 
+  if (urlDatabase[inId].userID === user_id) {
+    urlDatabase[inId].longURL = req.body.updateURL;
+    res.redirect(`/urls`);
   }
-  res.redirect(`/urls`);
+
+  // Not logged in
+  if (user_id === undefined) {
+    templateVars.cond = 'Not logged in';
+  } else {
+  // Doesn't own
+    templateVars.cond = "Can't edit unowned urls";
+  }
+  res.render('urls_show', templateVars);
 });
 
 // Redirect based on short address.
 app.get("/u/:id", (req, res) => {
-  let currLong = urlDatabase[req.params.id].longURL;
+  // no url for id
+  let currUrl = urlDatabase[req.params.id];
+  if (!currUrl) {
+    let templateVars = {
+      username : undefined,
+      cond :'URL does not exist'
+    };
+    res.render('urls_show', templateVars);
+  }
+  let currLong = currUrl.longURL;
   if (currLong !== undefined) {
-    console.log('currLong', currLong);
-    console.log(urlDatabase);
+    // console.log('currLong', currLong);
+    // console.log(urlDatabase);
     res.redirect(`${currLong}`);
   }
 });
@@ -166,7 +201,15 @@ app.post("/urls", (req, res) => {
   const currShort = generateRandomString();
   const {user_id} = req.session;
   let currLong = req.body.longURL;
-  
+  // if not logged in
+  if (!user_id) {
+    let templateVars = {
+      username : undefined,
+      cond :'Not logged in'
+    };
+    res.render('urls_show', templateVars);
+  }
+
   urlDatabase[currShort] = {
     longURL: currLong,
     userID: user_id,
@@ -179,22 +222,18 @@ app.get("/urls", (req, res) => {
   // not logged in
   const user_id = req.session.user_id;
   const usersUrls = urlsForUser(user_id, urlDatabase);
-  if (req.session.user_id === undefined) {
-    const templateVars = {
-      username: undefined,
-      urls: usersUrls,
-      cond: 'Must be logged in to see urls',
-    };
-    res.status(403);
-    res.render('urls_index', templateVars);
-    return;
+
+  const templateVars = {
+    username: undefined,
+    urls: usersUrls,
+    cond: 'Must be logged in to see urls'
+  };
+
+  if (user_id) {
+    templateVars.username = users[user_id].email;
+    templateVars.cond = undefined;
   }
   // Display urls
-  const templateVars = {
-    username: users[user_id].email,
-    urls: usersUrls,
-    cond: undefined,
-  };
   res.render('urls_index', templateVars);
 });
 
