@@ -28,7 +28,11 @@ app.use((req, res, next) => {
     user_id === undefined &&
     path !== '/login' &&
     path !== '/register'
+<<<<<<< HEAD
   )  {
+=======
+  ) {
+>>>>>>> ef8db80 (fixed curly brace location)
     res.status(403);
     res.redirect('/login');
   }
