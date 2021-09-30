@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const morgan = require('morgan');
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
@@ -9,8 +9,13 @@ const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
-app.use(cookieParser());
-// app.use(morgan);
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+
+}));
 
 morgan('tiny');
 
@@ -69,7 +74,7 @@ const urlsForUser = (id, searchData) => {
 
 const users = {
   'xckdkl': {
-    pass:'password',
+    pass:bcrypt.hashSync('password', 10),//password
     id:'xckdkl',
     email: 'me@we.com',
   },
@@ -109,7 +114,7 @@ app.get("/urls.json", (req, res) => {
 // Making a new short url
 app.get("/urls/new", (req, res) => {
   // if not logged in
-  const {user_id} = req.cookies;
+  const {user_id} = req.session;
 
   if (user_id === undefined) {
     res.status(403);
@@ -125,7 +130,7 @@ app.get("/urls/new", (req, res) => {
 
 // delete a short url entry
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const {user_id} = req.cookies;
+  const {user_id} = req.session;
   // res.redirect(urlDatabase[req.params.shortURL]);
   const currShort = req.params.shortURL;
   // console.log('logged in', user_id);
@@ -146,7 +151,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/urls/:ids", (req, res) => {
   // if not logged in
-  const {user_id} = req.cookies;
+  const {user_id} = req.session;
   if (user_id === undefined) {
     res.status(403);
     res.redirect('/login');
@@ -167,8 +172,8 @@ app.get("/urls/:ids", (req, res) => {
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
   // if not logged in
-  const {user_id} = req.cookies;
-  if (req.cookies.user_id === undefined) {
+  const {user_id} = req.session;
+  if (req.session.user_id === undefined) {
     res.status(403);
     res.redirect('/login');
   }
@@ -196,7 +201,8 @@ app.get("/u/:id", (req, res) => {
 // add a url
 app.post("/urls", (req, res) => {
   // if not logged in
-  const {user_id} = req.cookies;
+  const {user_id} = req.session;
+  
   // console.log(username);
   if (user_id === undefined) {
     res.status(403);
@@ -213,15 +219,20 @@ app.post("/urls", (req, res) => {
 
 // see url LIST
 app.get("/urls", (req, res) => {
-  // console.log('in urls', req.cookies);
+  // console.log('in urls', req.session);
   // not logged in
-  const {user_id} = req.cookies;
+  const user_id = req.session.user_id;
+
+  // console.log('here is cookie id ', req.session.user_id);
+
   const usersUrls = urlsForUser(user_id, urlDatabase);
-  if (req.cookies.user_id === undefined) {
-    console.log('need to log in again');
+  console.log('main urls', user_id);
+
+  if (req.session.user_id === undefined) {
+    console.log('url list need to log in again');
     // res.redirect('/login');
     const templateVars = {
-      username: users[user_id].email,
+      username: undefined,
       urls: usersUrls,
       cond: 'Must be logged in to see urls',
     };
@@ -239,14 +250,15 @@ app.get("/urls", (req, res) => {
   };
   res.render('urls_index', templateVars);
   // res.json(urlDatabase);
-  // console.log(req.cookies);
+  // console.log(req.session);
 });
 
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
-
-  if (req.cookies.user_id !== undefined) {
+  // let cursession = req.session;
+  console.log(req.session.user_id);
+  if (req.session.user_id !== undefined) {
     console.log('starturls');
     res.redirect('/urls');
     return;
@@ -265,11 +277,12 @@ app.get('/login', (req, res) => {
   // if logged in
   // console.log('login', req.params);
   // try with flag
+  // console.log(req.session);
   let loginstatus = {};
   loginstatus.cond = req.params.login;
-  loginstatus.username = req.cookies.user_id;
-  // console.log('can we do cookies?', req.cookies);
-  if (req.cookies.user_id === undefined) {
+  loginstatus.username = req.session.user_id;
+  // console.log('can we do cookies?', req.session);
+  if (loginstatus.username === undefined) {
     // console.log('rendering login');
     res.render('urls_login', loginstatus);
     return;
@@ -287,12 +300,14 @@ app.post('/login', (req, res) => {
 
   // case1
   const currUser = userfinder(username, pass, users);
-
+  // console.log(currUser);
 
   if (typeof  currUser === 'object') {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
-    res.cookie('user_id',currUser.id);
+
+    req.session.user_id = currUser.id
+    // res.cookie('user_id',currUser.id);
     res.redirect('/urls');
     return;
   }
@@ -308,13 +323,14 @@ app.post('/login', (req, res) => {
 
 // new user
 app.get('/register', (req, res) => {
-  const {user_id} = req.cookies;
+  
   // console.log('in register now');
-  let loginstatus = {};
-  loginstatus.cond = req.params.login;
-  loginstatus.username = users[user_id];
+  let loginstatus = {
+    cond: undefined,
+    username: undefined,
+  };
 
-  if (req.cookies.user_id === undefined) {
+  if (req.session.user_id === undefined) {
     res.render('urls_register', loginstatus);
     return;
   }
@@ -355,8 +371,9 @@ app.post('/register', (req, res) => {
     pass : bcrypt.hashSync(pass, 10),
     email: username,
   };
-  console.log(users);
-  res.cookie('user_id',curruid);
+  // console.log(users);
+  req.session.user_id = curruid;
+  console.log('here is cookie id ', req.session.user_id);
   res.redirect('/urls');
 
   // res.redirect('/urls');
@@ -365,7 +382,7 @@ app.post('/register', (req, res) => {
 // delete cookie
 app.post('/logout', (req, res) => {
   // if logged in
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/login');
 });
 
