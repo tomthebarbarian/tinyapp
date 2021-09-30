@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs');
 
+// returns the user object by if email and password are correct,
+// or only email if only the email is correct
+// or false if user doesn't exist.
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
     let {email, pass} = searchData[elem];
@@ -15,7 +18,8 @@ const userfinder = (user, password, searchData) => {
   return false;
 };
 
-// returns object only containing url objects where userID === id
+// returns object containing url object where userID === id
+// or an empty object if no urls belong to the user
 const urlsForUser = (id, searchData) => {
   const ansObj = {};
   for (let elem in searchData) {
