@@ -57,12 +57,12 @@ const users = {
   },
   'slkdls': {
     id: 'slkdls',
-    pass: 'qwerty',
+    pass: bcrypt.hashSync('qwerty', 10),
     email: 'abc@123.com',
   },
   'abcdef': {
     id: 'abcdef',
-    pass: 'asdfg',
+    pass: bcrypt.hashSync('asdfg',10),
     email: '123@123.com',
 
   },
