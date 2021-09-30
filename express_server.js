@@ -306,7 +306,7 @@ app.post('/login', (req, res) => {
     // console.log('login params',req.params);
     // console.log('login body',req.body);
 
-    req.session.user_id = currUser.id
+    req.session.user_id = currUser.id;
     // res.cookie('user_id',currUser.id);
     res.redirect('/urls');
     return;
@@ -325,16 +325,10 @@ app.post('/login', (req, res) => {
 app.get('/register', (req, res) => {
   
   // console.log('in register now');
-<<<<<<< HEAD
   let loginstatus = {
     cond: undefined,
     username: undefined,
   };
-=======
-  let loginstatus = {};
-  loginstatus.cond = req.params.login;
-  loginstatus.username = users[user_id];
->>>>>>> 0764131 (implemented hash password checking)
 
   if (req.session.user_id === undefined) {
     res.render('urls_register', loginstatus);
