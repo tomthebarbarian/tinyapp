@@ -6,6 +6,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
+        <!-- Logged in -->
         <% if (username) { %>
           <a class="nav-item nav-link"> Logged in as: <%= username %> </a>
           <a class="nav-item nav-link">
@@ -15,9 +16,8 @@
           </a>
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-  
         <% } else { %>
-
+        <!-- Not logged in -->
           <a class="nav-item nav-link">
             <form  action="/login" method="get">
               <div>
