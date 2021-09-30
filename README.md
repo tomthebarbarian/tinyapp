@@ -115,10 +115,13 @@ if user is logged it but does not own the URL for the given ID:
 #### POST /urls/:id/delete DONE BUT MINOR
 if user is logged in and owns the URL for the given ID:
 deletes the URL DONE
+
 redirects to /urls DONE
 if user is not logged in:
+
 (Minor) returns HTML with a relevant error message
 if user is logged it but does not own the URL for the given ID:
+
 (Minor) returns HTML with a relevant error message
 
 #### GET /login DONE 
