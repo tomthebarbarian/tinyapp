@@ -21,7 +21,7 @@ Done  a link to the registration page (/register)
 if user is logged in:
 (Minor) redirect to /urls * DONE
 if user is not logged in:
-(Minor) redirect to /login
+(Minor) redirect to /login DONE
 
 #### GET /urls
 
@@ -30,7 +30,7 @@ returns HTML with:
 the site header (see Display Requirements above)
 a list (or table) of URLs the user has created, each list item containing:
 a short URL
-the short URL's matching long URL
+the short URL's matching long URL DONE
 
 an edit button which makes a GET request to /urls/:id Done
 
@@ -43,7 +43,8 @@ a delete button which makes a POST request to /urls/:id/delete Done
 
 (Stretch) the number of unique visits for the short URL
 
-(Minor) a link to "Create a New Short Link" which makes a GET request to /urls/new
+(Minor) a link to "Create a New Short Link" which makes a GET request to /urls/new DONE
+
 if user is not logged in:
 returns HTML with a relevant error message
 

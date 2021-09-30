@@ -93,9 +93,8 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
-  const templateVars = {
-    username: users[user_id].email,
-  };
+  const templateVars = {};
+  templateVars.username = users[user_id].email || undefined;
   res.render("urls_new", templateVars);
 });
 
@@ -205,7 +204,12 @@ app.get('/login', (req, res) => {
   let loginstatus = {};
   loginstatus.cond = req.params.login;
   loginstatus.username = req.session.user_id;
+  if (req.status === 403) {
+    console.log(req.status);
+    loginstatus.code = 'must be logged in';
+  }
   // console.log('can we do cookies?', req.session);
+
   if (loginstatus.username === undefined) {
     res.render('urls_login', loginstatus);
     return;
