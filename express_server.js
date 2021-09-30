@@ -250,7 +250,7 @@ app.get('/register', (req, res) => {
 
 // register post
 app.post('/register', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const loginstatus = {
     cond:'Existing User',
     username: undefined
