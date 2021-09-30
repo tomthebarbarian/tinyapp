@@ -3,7 +3,7 @@ LHL first marked project, url shortener tinyapp
 
 ## Requirements
 
-### Display
+### Display DONE
 
 Site Header:
 if a user is logged in, the header shows:
@@ -16,14 +16,14 @@ Done  a link to the registration page (/register)
 
 ### Behavior
 
-#### GET / 
+#### GET / DONE
 
 if user is logged in:
 (Minor) redirect to /urls * DONE
 if user is not logged in:
 (Minor) redirect to /login DONE
 
-#### GET /urls
+#### GET /urls DONE BUT STRETCH
 
 if user is logged in: DONE
 returns HTML with:
@@ -46,36 +46,40 @@ a delete button which makes a POST request to /urls/:id/delete Done
 (Minor) a link to "Create a New Short Link" which makes a GET request to /urls/new DONE
 
 if user is not logged in:
-returns HTML with a relevant error message
+returns HTML with a relevant error message DONE
 
-#### GET /urls/new
+#### GET /urls/new DONE
 
 if user is logged in:
 returns HTML with:
 the site header (see Display Requirements above)
 
 a form which contains:
-a text input field for the original (long) URL
-a submit button which makes a POST request to /urls
+a text input field for the original (long) URL DONE
+a submit button which makes a POST request to /urls DONE
 if user is not logged in:
-redirects to the /login page
+
+redirects to the /login page DONE
 
 #### GET /urls/:id
-if user is logged in and owns the URL for the given ID:
+if user is logged in and owns the URL for the given ID: DEONE
 returns HTML with:
-the site header (see Display Requirements above)
+the site header (see Display Requirements above) DONE
 the short URL (for the given ID)
 a form which contains:
-the corresponding long URL
-an update button which makes a POST request to /urls/:id
+the corresponding long URL DONE
+an update button which makes a POST request to /urls/:id DONE
 
 (Stretch) the date the short URL was created
 (Stretch) the number of times the short URL was visited
 (Stretch) the number of unique visits for the short URL
+
 if a URL for the given ID does not exist:
 (Minor) returns HTML with a relevant error message
+
 if user is not logged in:
-returns HTML with a relevant error message
+returns HTML with a relevant error message 
+
 if user is logged it but does not own the URL with the given ID:
 returns HTML with a relevant error message
 

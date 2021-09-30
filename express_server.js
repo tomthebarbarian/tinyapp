@@ -27,7 +27,9 @@ app.use((req, res, next) => {
   if (
     user_id === undefined &&
     path !== '/login' &&
-    path !== '/register'
+    path !== '/register' &&
+    path !== '/urls' &&
+    path.slice(0,4) !== '/url'
   ) {
     res.status(403);
     res.redirect('/login');
@@ -113,12 +115,27 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/urls/:ids", (req, res) => {
   // Display url
   const {user_id} = req.session;
-
   const templateVars = {
-    username: users[user_id].email,
-    shortURL: req.params.ids,
-    longURL: urlDatabase[req.params.ids].longURL,
+    username : user_id
   };
+  const inId = req.params.ids;
+
+  // Not logged in
+  if (req.session.user_id === undefined) {
+    templateVars.cond = 'Not logged in';
+  } else if (!Object.keys(urlDatabase).includes(inId)) {
+  // Doesn't exist
+    templateVars.cond = 'URL does not exist';
+  } else if (urlDatabase[inId].userID !== user_id) {
+  // Doesn't own
+    templateVars.cond = 'Can not edit unowned urls';
+  } else {
+  // Reg
+    templateVars.username = users[user_id].email;
+    templateVars.shortURL = req.params.ids;
+    templateVars.longURL = urlDatabase[req.params.ids].longURL;
+    templateVars.cond = undefined;
+  }
   res.render('urls_show', templateVars);
 });
 
