@@ -61,7 +61,7 @@ if user is not logged in:
 
 redirects to the /login page DONE
 
-#### GET /urls/:id
+#### GET /urls/:id DONE BUT STRETCH
 if user is logged in and owns the URL for the given ID: DEONE
 returns HTML with:
 the site header (see Display Requirements above) DONE
@@ -75,23 +75,23 @@ an update button which makes a POST request to /urls/:id DONE
 (Stretch) the number of unique visits for the short URL
 
 if a URL for the given ID does not exist:
-(Minor) returns HTML with a relevant error message
+(Minor) returns HTML with a relevant error message DONE
 
 if user is not logged in:
-returns HTML with a relevant error message 
+returns HTML with a relevant error message DONE
 
 if user is logged it but does not own the URL with the given ID:
-returns HTML with a relevant error message
+returns HTML with a relevant error message DONE
 
-#### GET /u/:id
+#### GET /u/:id DONE BUT MINOR
 
 if URL for the given ID exists:
-redirects to the corresponding long URL
+redirects to the corresponding long URL DONE
 
 if URL for the given ID does not exist:
 (Minor) returns HTML with a relevant error message
 
-#### POST /urls
+#### POST /urls DONE BUT MINOR
 
 if user is logged in: Done
 generates a short URL, saves it, and associates it with the user DONE
@@ -100,11 +100,11 @@ if user is not logged in:
 (Minor) 
 returns HTML with a relevant error message
 
-#### POST /urls/:id
+#### POST /urls/:id DONE BUT MINOR
 
 if user is logged in and owns the URL for the given ID:
-updates the URL
-redirects to /urls
+updates the URL DONE
+redirects to /urls DONE
 
 if user is not logged in:
 (Minor) returns HTML with a relevant error message
@@ -112,16 +112,16 @@ if user is not logged in:
 if user is logged it but does not own the URL for the given ID:
 (Minor) returns HTML with a relevant error message
 
-#### POST /urls/:id/delete
+#### POST /urls/:id/delete DONE BUT MINOR
 if user is logged in and owns the URL for the given ID:
-deletes the URL
-redirects to /urls
+deletes the URL DONE
+redirects to /urls DONE
 if user is not logged in:
 (Minor) returns HTML with a relevant error message
 if user is logged it but does not own the URL for the given ID:
 (Minor) returns HTML with a relevant error message
 
-#### GET /login
+#### GET /login DONE 
 
 if user is logged in:
 (Minor) redirects to /urls DONE
@@ -132,7 +132,7 @@ input fields for email and password DONE
 submit button that makes a POST request to /login DONE
 
 
-### GET /register
+### GET /register DONE
 
 if user is logged in:
 (Minor) redirects to /urls DONE
@@ -151,7 +151,7 @@ redirects to /urls
 if email and password params don't match an existing user: 
 returns HTML with a relevant error message
 
-#### POST /register
+#### POST /register DONE
 
 if email or password are empty:
 returns HTML with a relevant error message DONE
@@ -161,12 +161,12 @@ returns HTML with a relevant error message DONE
 otherwise:
 
 creates a new user
-encrypts the new user's password with bcrypt
+encrypts the new user's password with bcrypt DONE
 
 sets a cookie DONE
 redirects to /urls
 
-#### POST /logout
+#### POST /logout DONE
 
 deletes cookie DONE
-redirects to /urls
+redirects to /urls DONE

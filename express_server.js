@@ -128,13 +128,13 @@ app.get("/urls/:ids", (req, res) => {
     templateVars.cond = 'URL does not exist';
   } else if (urlDatabase[inId].userID !== user_id) {
   // Doesn't own
-    templateVars.cond = 'Can not edit unowned urls';
+    templateVars.cond = "Can't edit unowned urls";
   } else {
   // Reg
     templateVars.username = users[user_id].email;
     templateVars.shortURL = req.params.ids;
     templateVars.longURL = urlDatabase[req.params.ids].longURL;
-    templateVars.cond = undefined;
+    templateVars.cond = false;
   }
   res.render('urls_show', templateVars);
 });
@@ -147,7 +147,7 @@ app.post("/urls/:id", (req, res) => {
   if (urlDatabase[req.params.id].userID === user_id) {
     urlDatabase[req.params.id].longURL = req.body.updateURL;
   }
-  res.redirect(`/urls/${req.params.id}`);
+  res.redirect(`/urls`);
 });
 
 // Redirect based on short address.
@@ -166,6 +166,7 @@ app.post("/urls", (req, res) => {
   const currShort = generateRandomString();
   const {user_id} = req.session;
   let currLong = req.body.longURL;
+  
   urlDatabase[currShort] = {
     longURL: currLong,
     userID: user_id,
@@ -310,7 +311,7 @@ app.post('/register', (req, res) => {
 app.post('/logout', (req, res) => {
   // if logged in
   req.session = null;
-  res.redirect('/login');
+  res.redirect('/urls');
 });
 
 // if 404 err
