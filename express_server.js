@@ -44,6 +44,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 const generateRandomString = () => uuid.v4().substr(0,6);
 
 // Find if user and pass of input are equivalent to values in
+const {userfinder, urlsForUser} = require('./helpers');
+
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
     let {email, pass} = searchData[elem];
