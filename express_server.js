@@ -28,7 +28,12 @@ app.use((req, res, next) => {
     user_id === undefined &&
     path !== '/login' &&
     path !== '/register'
+<<<<<<< HEAD
   ) {
+=======
+  )
+  {
+>>>>>>> a952b09 (refactored code and changed a bunch of comments and whitespace)
     res.status(403);
     res.redirect('/login');
   }
@@ -285,8 +290,11 @@ app.post('/login', (req, res) => {
 
 // new user
 app.get('/register', (req, res) => {
+<<<<<<< HEAD
   
   // console.log('in register now');
+=======
+>>>>>>> a952b09 (refactored code and changed a bunch of comments and whitespace)
   let loginstatus = {
     cond: undefined,
     username: undefined,
