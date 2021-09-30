@@ -135,7 +135,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // Individidual short address pages
 app.get("/urls/:ids", (req, res) => {
-  // if not logged in
   // Display url
   const {user_id} = req.session;
 
@@ -155,16 +154,12 @@ app.post("/urls/:id", (req, res) => {
   if (urlDatabase[req.params.id].userID === user_id) {
     urlDatabase[req.params.id].longURL = req.body.updateURL;
   }
-  // console.log('curr params',req.params);
-  // console.log('curr body',req.body);
-  // console.log('url db', urlDatabase);
   res.redirect(`/urls/${req.params.id}`);
 });
 
 // Redirect based on short address.
 app.get("/u/:id", (req, res) => {
   let currLong = urlDatabase[req.params.id].longURL;
-  // console.log('past promise');
   if (currLong !== undefined) {
     console.log('currLong', currLong);
     console.log(urlDatabase);
@@ -187,18 +182,10 @@ app.post("/urls", (req, res) => {
 
 // see url LIST
 app.get("/urls", (req, res) => {
-  // console.log('in urls', req.session);
   // not logged in
   const user_id = req.session.user_id;
-
-  // console.log('here is cookie id ', req.session.user_id);
-
   const usersUrls = urlsForUser(user_id, urlDatabase);
-  console.log('main urls', user_id);
-
   if (req.session.user_id === undefined) {
-    // console.log('url list need to log in again');
-    // res.redirect('/login');
     const templateVars = {
       username: undefined,
       urls: usersUrls,
@@ -208,17 +195,13 @@ app.get("/urls", (req, res) => {
     res.render('urls_index', templateVars);
     return;
   }
-  // console.log(user_id);
-  console.log('/urls/',usersUrls);
-
+  // Display urls
   const templateVars = {
     username: users[user_id].email,
     urls: usersUrls,
     cond: undefined,
   };
   res.render('urls_index', templateVars);
-  // res.json(urlDatabase);
-  // console.log(req.session);
 });
 
 
@@ -227,7 +210,7 @@ app.get("/", (req, res) => {
   // let cursession = req.session;
   console.log(req.session.user_id);
   if (req.session.user_id !== undefined) {
-    console.log('starturls');
+    // console.log('starturls');
     res.redirect('/urls');
     return;
   }
@@ -242,28 +225,20 @@ app.get("/", (req, res) => {
 
 // just login
 app.get('/login', (req, res) => {
-  // if logged in
-  // console.log('login', req.params);
-  // try with flag
-  // console.log(req.session);
   let loginstatus = {};
   loginstatus.cond = req.params.login;
   loginstatus.username = req.session.user_id;
   // console.log('can we do cookies?', req.session);
   if (loginstatus.username === undefined) {
-    // console.log('rendering login');
     res.render('urls_login', loginstatus);
     return;
   }
-  // console.log('also going to urls?');
   res.redirect('/urls');
 });
 
 
 app.post('/login', (req, res) => {
   // if logged in
-  // console.log(req.body);
-  // console.log(users[req.body.username].pass);
   const {username, pass} = req.body;
   // case1
   const currUser = userfinder(username, pass, users);
@@ -329,9 +304,7 @@ app.post('/register', (req, res) => {
     pass : bcrypt.hashSync(pass, 10),
     email: username,
   };
-  // console.log(users);
   req.session.user_id = curruid;
-  // console.log('here is cookie id ', req.session.user_id);
   res.redirect('/urls');
 });
 
