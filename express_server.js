@@ -28,11 +28,7 @@ app.use((req, res, next) => {
     user_id === undefined &&
     path !== '/login' &&
     path !== '/register'
-<<<<<<< HEAD
-  )  {
-=======
   ) {
->>>>>>> ef8db80 (fixed curly brace location)
     res.status(403);
     res.redirect('/login');
   }
@@ -291,19 +287,11 @@ app.post('/login', (req, res) => {
 app.get('/register', (req, res) => {
   
   // console.log('in register now');
-<<<<<<< HEAD
   let loginstatus = {
     cond: undefined,
     username: undefined,
   };
   if (req.session.user_id === undefined) {
-=======
-  let loginstatus = {};
-  loginstatus.cond = req.params.login;
-  loginstatus.username = users[user_id];
-
-  if (req.cookies.user_id === undefined) {
->>>>>>> 0764131 (implemented hash password checking)
     res.render('urls_register', loginstatus);
     return;
   }
