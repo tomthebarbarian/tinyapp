@@ -87,11 +87,6 @@ app.listen(PORT);
 console.log(`listening at ${PORT}`);
 
 // Requests
-// just read the db
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
 // Making a new short url
 app.get("/urls/new", (req, res) => {
   // if not logged in
@@ -160,12 +155,11 @@ app.post("/urls/:id", (req, res) => {
     username : user_id
   };
   const inId = req.params.id;
-  // Can update 
+  // Can update
   if (urlDatabase[inId].userID === user_id) {
     urlDatabase[inId].longURL = req.body.updateURL;
     res.redirect(`/urls`);
   }
-
   // Not logged in
   if (user_id === undefined) {
     templateVars.cond = 'Not logged in';
