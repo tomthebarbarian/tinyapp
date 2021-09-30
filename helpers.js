@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const userfinder = (user, password, searchData) => {
   for (let elem in searchData) {
     let {email, pass} = searchData[elem];
