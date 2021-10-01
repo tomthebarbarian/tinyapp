@@ -4,6 +4,8 @@ TinyApp is a web application built with Node and Express that allows users to sh
 
 Pass in a long URL and watch become much shorter before your eyes :).
 
+Then, you can share a the shortened url more flexibly.
+
 ## Final Product
 
 !["The Login Screen"](images/Login.png)
@@ -31,4 +33,6 @@ Pass in a long URL and watch become much shorter before your eyes :).
 !["The Login Screen"](images/Login.png)
 
 5. Press the register button and input a username and password to be registered and go to the main screen
-!["Your list of htmls"](images/MainScreen.png)
+!["Your list of htmls"](images/EmptyList.png)
+
+6. Click on "Create New URL" to go to the page to make urls shorter. 
