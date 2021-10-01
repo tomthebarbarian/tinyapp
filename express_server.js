@@ -36,8 +36,8 @@ app.use((req, res, next) => {
     path.slice(0,4) !== '/url' &&
     path.slice(0,2) !== '/u'
   ) {
-    res.status(403);
-    res.redirect('/login');
+    res.status(403).redirect('/login');
+    return;
   }
   next();
 });
@@ -58,10 +58,16 @@ const {userfinder, urlsForUser} = require('./helpers');
 app.get("/urls/new", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
+  if (!user_id) {
+    res.status(403).redirect('/login');
+    return;
+  }
+
   const templateVars = {};
   templateVars.username = users[user_id].email || undefined;
   res.render("urls_new", templateVars);
 });
+
 
 // delete a short url entry
 app.post("/urls/:shortURL/delete", (req, res) => {
@@ -204,7 +210,7 @@ app.get("/", (req, res) => {
   }
   // if not logged in
   res.redirect('/login');
-  
+  return;
 });
 
 // Log in and Register
