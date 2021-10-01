@@ -22,6 +22,8 @@ Then, you can share a the shortened url more flexibly.
 - cookie-session
 - UUID
 
+c1023b
+
 ## Getting Started
 
 1. Install all dependencies (using the `npm install` command).
@@ -36,3 +38,17 @@ Then, you can share a the shortened url more flexibly.
 !["Your list of htmls"](images/EmptyList.png)
 
 6. Click on "Create New URL" to go to the page to make urls shorter. 
+
+7. Enter a Http:// url for conversion.
+!["Create New Urls"](images/CreateNewUrl.png)
+
+8. Click submit
+
+9. Copy the Short Url address and you're ready to paste
+!["Shortened Url"](images/ShortenedUrl.png)
+
+## Things to note.
+
+* The short url is for a locally hosted link, so is not usable while the server is offline
+
+* Click the update and delete buttons on the page of urls to do appropriate adjustments.
