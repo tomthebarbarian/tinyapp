@@ -84,7 +84,6 @@ const urlDatabase = {
 
 // Server listening;
 app.listen(PORT);
-console.log(`listening at ${PORT}`);
 
 // Requests
 // Making a new short url
@@ -220,7 +219,6 @@ app.get("/urls", (req, res) => {
     urls: usersUrls,
     cond: 'Must be logged in to see urls'
   };
-
   if (user_id) {
     templateVars.username = users[user_id].email;
     templateVars.cond = undefined;
@@ -232,13 +230,11 @@ app.get("/urls", (req, res) => {
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
-  console.log(req.session.user_id);
   if (req.session.user_id !== undefined) {
     res.redirect('/urls');
     return;
   }
   // if not logged in
-  console.log('start login');
   res.redirect('/login');
   
 });
@@ -251,7 +247,6 @@ app.get('/login', (req, res) => {
   loginstatus.cond = req.params.login;
   loginstatus.username = req.session.user_id;
   if (req.status === 403) {
-    console.log(req.status);
     loginstatus.code = 'must be logged in';
   }
   if (loginstatus.username === undefined) {
