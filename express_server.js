@@ -214,7 +214,6 @@ app.get("/", (req, res) => {
 });
 
 // Log in and Register
-
 // just login
 app.get('/login', (req, res) => {
   let loginstatus = {};
@@ -233,24 +232,22 @@ app.get('/login', (req, res) => {
 
 
 app.post('/login', (req, res) => {
-  // if logged in
-  const {username, pass} = req.body;
-  // case1
-  const currUser = userfinder(username, pass, users);
 
+  const {username, pass} = req.body;
+  // if user and pass are correct
+  const currUser = userfinder(username, pass, users);
   if (typeof  currUser === 'object') {
     req.session.user_id = currUser.id;
     res.redirect('/urls');
     return;
   }
-  // case4
+  // Something Wrong
   const loginstatus = {
     cond:'wrong username or password',
     username: undefined
     
   };
-  res.status(403);
-  res.render('urls_login',loginstatus);
+  res.status(403).render('urls_login',loginstatus);
 });
 
 // new user
@@ -283,14 +280,12 @@ app.post('/register', (req, res) => {
   }
   if (username.length < 1) {
     loginstatus.cond = 'Email is empty';
-    res.status(400);
-    res.render('urls_register',loginstatus);
+    res.status(400).render('urls_register',loginstatus);
     return;
   }
   if (pass.length < 1) {
     loginstatus.cond = 'Password is empty';
-    res.status(400);
-    res.render('urls_register',loginstatus);
+    res.status(400).render('urls_register',loginstatus);
     return;
   }
   users[curruid] = {
