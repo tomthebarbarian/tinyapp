@@ -53,10 +53,6 @@ const generateRandomString = () => uuid.v4().substr(0,6);
 // Find if user and pass of input are equivalent to values in
 const {userfinder, urlsForUser} = require('./helpers');
 
-
-// Constants
-// usersobj
-
 // Requests
 // Making a new short url
 app.get("/urls/new", (req, res) => {
