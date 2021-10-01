@@ -1,3 +1,4 @@
 node_modules/
 tests/
 ToDolist.md 
+.DS_Store/
