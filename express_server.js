@@ -66,6 +66,7 @@ app.get("/urls/new", (req, res) => {
   const templateVars = {};
   templateVars.username = users[user_id].email || undefined;
   res.render("urls_new", templateVars);
+  return;
 });
 
 
@@ -85,9 +86,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   if (urlDatabase[currShort].userID === user_id) {
     delete urlDatabase[currShort];
     res.redirect("/urls");
+    return;
   }
   res.render('urls_index', templateVars);
-
+  return;
 });
 
 
@@ -132,6 +134,7 @@ app.post("/urls/:id", (req, res) => {
   if (urlDatabase[inId].userID === user_id) {
     urlDatabase[inId].longURL = req.body.updateURL;
     res.redirect(`/urls`);
+    return;
   }
   // Not logged in
   if (user_id === undefined) {
@@ -141,6 +144,7 @@ app.post("/urls/:id", (req, res) => {
     templateVars.cond = "Can't edit unowned urls";
   }
   res.render('urls_show', templateVars);
+  return;
 });
 
 // Redirect based on short address.
@@ -153,10 +157,12 @@ app.get("/u/:id", (req, res) => {
       cond :'URL does not exist'
     };
     res.render('urls_show', templateVars);
+    return;
   }
   let currLong = currUrl.longURL;
   if (currLong !== undefined) {
     res.redirect(`${currLong}`);
+    return;
   }
 });
 
@@ -180,6 +186,7 @@ app.post("/urls", (req, res) => {
     userID: user_id,
   };
   res.redirect(`/urls/${currShort}`);
+  return;
 });
 
 // see url LIST
@@ -199,6 +206,7 @@ app.get("/urls", (req, res) => {
   }
   // Display urls
   res.render('urls_index', templateVars);
+  return;
 });
 
 
@@ -248,6 +256,7 @@ app.post('/login', (req, res) => {
     
   };
   res.status(403).render('urls_login',loginstatus);
+  return;
 });
 
 // new user
@@ -261,6 +270,7 @@ app.get('/register', (req, res) => {
     return;
   }
   res.redirect('/urls');
+  return;
 });
 
 // register post
@@ -295,6 +305,7 @@ app.post('/register', (req, res) => {
   };
   req.session.user_id = curruid;
   res.redirect('/urls');
+  return;
 });
 
 // delete cookie
@@ -302,6 +313,7 @@ app.post('/logout', (req, res) => {
   // if logged in
   req.session = null;
   res.redirect('/urls');
+  return;
 });
 
 // if 404 err
