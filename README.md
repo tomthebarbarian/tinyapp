@@ -27,7 +27,7 @@ c1023b
 ## Getting Started
 
 1. Install all dependencies (using the `npm install` command).
-2.  Run the development web server using the `node express_server.js` command.
+2.  Run the development web server using the `node start` command.
 
 3. Open your http://localhost:8080/, if you change the port in express_server.js, you will need to change the port in the address
 

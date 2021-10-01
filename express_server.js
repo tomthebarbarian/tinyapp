@@ -4,9 +4,13 @@ const cookieSession = require('cookie-session');
 const morgan = require('morgan');
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
+const {users, urlDatabase} = require('./constants');
+
 
 const app = express();
 const PORT = 8080;
+
+
 
 app.set("view engine", "ejs");
 
@@ -52,38 +56,6 @@ const {userfinder, urlsForUser} = require('./helpers');
 
 // Constants
 // usersobj
-const users = {
-  'xckdkl': {
-    pass:bcrypt.hashSync('password', 10),//password
-    id:'xckdkl',
-    email: 'me@we.com',
-  },
-  'slkdls': {
-    id: 'slkdls',
-    pass: bcrypt.hashSync('qwerty', 10),
-    email: 'abc@123.com',
-  },
-  'abcdef': {
-    id: 'abcdef',
-    pass: bcrypt.hashSync('asdfg',10),
-    email: '123@123.com',
-
-  },
-};
-// urls obj
-const urlDatabase = {
-  "b2xVn2": {
-    longURL: "http://www.lighthouselabs.ca",
-    userID: 'xckdkl'
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userID: 'xckdkl',
-  },
-};
-
-// Server listening;
-app.listen(PORT);
 
 // Requests
 // Making a new short url
@@ -254,6 +226,7 @@ app.get('/login', (req, res) => {
     return;
   }
   res.redirect('/urls');
+  return;
 });
 
 
@@ -340,3 +313,5 @@ if (app.status === 404) {
 }
 
 
+// Server listening;
+app.listen(PORT);
