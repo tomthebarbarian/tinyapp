@@ -36,8 +36,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -62,30 +60,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
   return;
 });
-
-
-// delete a short url entry
-app.post("/urls/:shortURL/delete", (req, res) => {
-  const {user_id} = req.session;
-  const currShort = req.params.shortURL;
-  // not logged in
-  const templateVars = {
-    username: undefined,
-    cond: 'Must Own Url to delete'
-  };
-  if (!user_id) {
-    templateVars.cond = 'Must be logged in to delete urls';
-  }
-  // Logged in own
-  if (urlDatabase[currShort].userID === user_id) {
-    delete urlDatabase[currShort];
-    res.redirect("/urls");
-    return;
-  }
-  res.render('urls_index', templateVars);
-  return;
-});
-
 
 // Individidual short address pages
 app.get("/urls/:ids", (req, res) => {
@@ -116,6 +90,27 @@ app.get("/urls/:ids", (req, res) => {
   return;
 });
 
+// delete a short url entry
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const {user_id} = req.session;
+  const currShort = req.params.shortURL;
+  // not logged in
+  const templateVars = {
+    username: undefined,
+    cond: 'Must Own Url to delete'
+  };
+  if (!user_id) {
+    templateVars.cond = 'Must be logged in to delete urls';
+  }
+  // Logged in own
+  if (urlDatabase[currShort].userID === user_id) {
+    delete urlDatabase[currShort];
+    res.redirect("/urls");
+    return;
+  }
+  res.render('urls_index', templateVars);
+  return;
+});
 
 // Update an individual page for an id
 app.post("/urls/:id", (req, res) => {
@@ -142,23 +137,24 @@ app.post("/urls/:id", (req, res) => {
   return;
 });
 
-// Redirect based on short address.
-app.get("/u/:id", (req, res) => {
-  // no url for id
-  let currUrl = urlDatabase[req.params.id];
-  if (!currUrl) {
-    let templateVars = {
-      username : undefined,
-      cond :'URL does not exist'
-    };
-    res.render('urls_show', templateVars);
-    return;
+// see url LIST
+app.get("/urls", (req, res) => {
+  // not logged in
+  const user_id = req.session.user_id;
+  const usersUrls = urlsForUser(user_id, urlDatabase);
+
+  const templateVars = {
+    username: undefined,
+    urls: usersUrls,
+    cond: 'Must be logged in to see urls'
+  };
+  if (user_id) {
+    templateVars.username = users[user_id].email;
+    templateVars.cond = undefined;
   }
-  let currLong = currUrl.longURL;
-  if (currLong !== undefined) {
-    res.redirect(`${currLong}`);
-    return;
-  }
+  // Display urls
+  res.render('urls_index', templateVars);
+  return;
 });
 
 
@@ -185,26 +181,25 @@ app.post("/urls", (req, res) => {
   return;
 });
 
-// see url LIST
-app.get("/urls", (req, res) => {
-  // not logged in
-  const user_id = req.session.user_id;
-  const usersUrls = urlsForUser(user_id, urlDatabase);
 
-  const templateVars = {
-    username: undefined,
-    urls: usersUrls,
-    cond: 'Must be logged in to see urls'
-  };
-  if (user_id) {
-    templateVars.username = users[user_id].email;
-    templateVars.cond = undefined;
+// Redirect based on short address.
+app.get("/u/:id", (req, res) => {
+  // no url for id
+  let currUrl = urlDatabase[req.params.id];
+  if (!currUrl) {
+    let templateVars = {
+      username : undefined,
+      cond :'URL does not exist'
+    };
+    res.render('urls_show', templateVars);
+    return;
   }
-  // Display urls
-  res.render('urls_index', templateVars);
-  return;
+  let currLong = currUrl.longURL;
+  if (currLong !== undefined) {
+    res.redirect(`${currLong}`);
+    return;
+  }
 });
-
 
 // redirect to appropriate start page
 app.get("/", (req, res) => {
@@ -236,7 +231,6 @@ app.get('/login', (req, res) => {
 
 
 app.post('/login', (req, res) => {
-
   const {username, pass} = req.body;
   // if user and pass are correct
   const currUser = userfinder(username, pass, users);
@@ -245,7 +239,7 @@ app.post('/login', (req, res) => {
     res.redirect('/urls');
     return;
   }
-  // Something Wrong
+  // If Something Wrong
   const loginstatus = {
     cond:'wrong username or password',
     username: undefined
@@ -255,7 +249,7 @@ app.post('/login', (req, res) => {
   return;
 });
 
-// new user
+// reg new user
 app.get('/register', (req, res) => {
   let loginstatus = {
     cond: undefined,
@@ -316,7 +310,6 @@ app.post('/logout', (req, res) => {
 if (app.status === 404) {
   return '404 error';
 }
-
 
 // Server listening;
 app.listen(PORT);
