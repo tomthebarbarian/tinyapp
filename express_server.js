@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-const morgan = require('morgan');
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
 const {users, urlDatabase} = require('./constants');
@@ -10,18 +9,13 @@ const {users, urlDatabase} = require('./constants');
 const app = express();
 const PORT = 8080;
 
-
-
 app.set("view engine", "ejs");
 
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
-
 }));
-
-morgan('tiny');
 
 // Logged in check
 // if cookie doesn't exist go back to login page.
@@ -119,6 +113,7 @@ app.get("/urls/:ids", (req, res) => {
     templateVars.cond = false;
   }
   res.render('urls_show', templateVars);
+  return;
 });
 
 
@@ -179,6 +174,7 @@ app.post("/urls", (req, res) => {
       cond :'Not logged in'
     };
     res.render('urls_show', templateVars);
+    return;
   }
 
   urlDatabase[currShort] = {
