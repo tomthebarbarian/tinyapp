@@ -22,12 +22,10 @@ Then, you can share a the shortened url more flexibly.
 - cookie-session
 - UUID
 
-c1023b
-
 ## Getting Started
 
 1. Install all dependencies (using the `npm install` command).
-2.  Run the development web server using the `node start` command.
+2.  Run the development web server using the `npm start` command.
 
 3. Open your http://localhost:8080/, if you change the port in express_server.js, you will need to change the port in the address
 
