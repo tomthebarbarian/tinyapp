@@ -1,6 +1,5 @@
 // Constants
 // usersobj
-const bcrypt = require('bcryptjs');
 const users = {
 };
 // urls obj
