@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const uuid = require('uuid');
 // function userfinder returns the user object if the given email and
 // password correspond with a user in the user dataset,
 // or the string "only email" if only the email is correct
@@ -18,6 +19,11 @@ const userfinder = (user, password, searchData) => {
   return false;
 };
 
+// function generateRandomString returns
+// a random length 6 string.
+const generateRandomString = () => uuid.v4().substr(0,6);
+
+
 // function urlsForUser returns object containing url object
 // where userID === id or an empty object if no urls belong
 // to the user
@@ -31,4 +37,4 @@ const urlsForUser = (id, searchData) => {
   return ansObj;
 };
 
-module.exports = {userfinder, urlsForUser};
+module.exports = {userfinder, urlsForUser, generateRandomString};

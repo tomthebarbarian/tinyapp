@@ -1,10 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
 const {users, urlDatabase} = require('./constants');
-
 
 const app = express();
 const PORT = 8080;
@@ -38,12 +36,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-
 // Helpers
-const generateRandomString = () => uuid.v4().substr(0,6);
-
-// Find if user and pass of input are equivalent to values in
-const {userfinder, urlsForUser} = require('./helpers');
+const {generateRandomString, userfinder, urlsForUser} = require('./helpers');
 
 // Requests
 // Making a new short url
