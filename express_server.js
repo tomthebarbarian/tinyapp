@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const methodOverride = require('method-override');
 const {users, urlDatabase} = require('./constants');
 
 const app = express();
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Helpers
@@ -85,7 +87,7 @@ app.get("/urls/:ids", (req, res) => {
 });
 
 // delete a short url entry
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL", (req, res) => {
   const {user_id} = req.session;
   const currShort = req.params.shortURL;
   // not logged in
@@ -96,6 +98,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   if (!user_id) {
     templateVars.cond = 'Must be logged in to delete urls';
   }
+  console.log(urlDatabase[currShort]);
+  console.log([currShort]);
   // Logged in own
   if (urlDatabase[currShort].userID === user_id) {
     delete urlDatabase[currShort];
@@ -107,26 +111,28 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 // Update an individual page for an id
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   // if not logged in
   const {user_id} = req.session;
   const templateVars = {
     username : user_id
   };
   const inId = req.params.id;
+  // Not logged in
+  console.log(urlDatabase[inId]);
+  if (user_id === undefined) {
+    templateVars.cond = 'Not logged in';
+    res.render('urls_show', templateVars);
+    return;
+  }
   // Can update
   if (urlDatabase[inId].userID === user_id) {
     urlDatabase[inId].longURL = req.body.updateURL;
     res.redirect(`/urls`);
     return;
   }
-  // Not logged in
-  if (user_id === undefined) {
-    templateVars.cond = 'Not logged in';
-  } else {
   // Doesn't own
-    templateVars.cond = "Can't edit unowned urls";
-  }
+  templateVars.cond = "Can't edit unowned urls";
   res.render('urls_show', templateVars);
   return;
 });
@@ -223,7 +229,7 @@ app.get('/login', (req, res) => {
   return;
 });
 
-
+// Actually logging in.
 app.post('/login', (req, res) => {
   const {username, pass} = req.body;
   // if user and pass are correct
@@ -293,7 +299,7 @@ app.post('/register', (req, res) => {
 });
 
 // delete cookie
-app.post('/logout', (req, res) => {
+app.delete('/logout', (req, res) => {
   // if logged in
   req.session = null;
   res.redirect('/urls');

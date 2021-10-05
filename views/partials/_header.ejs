@@ -10,7 +10,7 @@
         <% if (username) { %>
           <a class="nav-item nav-link"> Logged in as: <%= username %> </a>
           <a class="nav-item nav-link">
-            <form  action="/logout" method="POST">
+            <form  action="/logout?_method=DELETE" method="POST">
               <button type="submit" class="btn btn-primary">logout</button>
             </form>
           </a>
