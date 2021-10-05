@@ -80,6 +80,7 @@ app.get("/urls/:ids", (req, res) => {
     templateVars.username = users[user_id].email;
     templateVars.shortURL = req.params.ids;
     templateVars.longURL = urlDatabase[req.params.ids].longURL;
+    templateVars.visitors = urlDatabase[req.params.ids].visitors;
     templateVars.cond = false;
   }
   res.render('urls_show', templateVars);
@@ -176,6 +177,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[currShort] = {
     longURL: currLong,
     userID: user_id,
+    visitors: 0,
   };
   res.redirect(`/urls/${currShort}`);
   return;
@@ -194,8 +196,10 @@ app.get("/u/:id", (req, res) => {
     res.render('urls_show', templateVars);
     return;
   }
+  
   let currLong = currUrl.longURL;
   if (currLong !== undefined) {
+    urlDatabase[req.params.id].visitors ++; // Increment visitor
     res.redirect(`${currLong}`);
     return;
   }
